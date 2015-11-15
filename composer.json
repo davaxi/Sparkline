@@ -23,10 +23,12 @@
     },
     "minimum-stability": "stable",
     "require": {
-        "php": ">=5.3.0"
+        "php": ">=5.3.0",
+        "ext-gd": "*"
     },
     "require-dev": {
         "php": ">=5.3.0",
+        "ext-gd": "*",
         "phpunit/phpunit": "4.3.*"
     },
     "autoload": {
