@@ -91,7 +91,12 @@ class Sparkline
      */
     public function setETag($ETag)
     {
-        $this->ETag = md5($ETag);
+        if (is_null($ETag)) {
+            $this->ETag = null;
+        }
+        else {
+            $this->ETag = md5($ETag);
+        }
     }
 
     /**
@@ -112,7 +117,7 @@ class Sparkline
      */
     public function setWidth($width)
     {
-        $this->width = $width;
+        $this->width = (int)$width;
     }
 
     /**
@@ -120,7 +125,7 @@ class Sparkline
      */
     public function setHeight($height)
     {
-        $this->height = $height;
+        $this->height = (int)$height;
     }
 
     /**
@@ -138,6 +143,9 @@ class Sparkline
      */
     public function setExpire($expire)
     {
+        if (is_null($expire)) {
+            $this->expire = null;
+        }
         if (is_numeric($expire)) {
             $this->expire = $expire;
         }
@@ -249,15 +257,15 @@ class Sparkline
         imagefill($picture, 0, 0, $backgroundColor);
         imagesetthickness($picture, $lineThickness);
 
-        $maxValue = $max * $height;
         $minHeight = 1 * $this->ratioComputing;
         $maxHeight = $height - $minHeight;
         foreach ($this->data as $i => $value) {
+            $value = (int)$value;
             if ($value <= 0) {
                 $value = 0;
             }
             if ($value > 0) {
-                $value = round($value / $maxValue);
+                $value = round($value / $max * $height);
             }
             $this->data[$i] = max($minHeight, min($value, $maxHeight));
         }
@@ -296,7 +304,6 @@ class Sparkline
             list($x1, $y1, $x2, $y2) = $coordinates;
             imageline($picture, $x1, $y1, $x2, $y2, $lineColor);
         }
-
         $sparkline = imagecreatetruecolor($this->width, $this->height);
         imagecopyresampled($sparkline, $picture, 0, 0, 0, 0, $this->width, $this->height, $width, $height);
         imagedestroy($picture);
@@ -321,7 +328,7 @@ class Sparkline
         if ($this->ETag) {
             header('ETag: ' . $this->ETag);
         }
-        if ($this->expire) {
+        if (!is_null($this->expire)) {
             header('Expires: ' . gmdate('D, d M Y H:i:s T', $this->expire));
         }
         imagepng($this->file);
@@ -337,7 +344,9 @@ class Sparkline
 
     public function destroy()
     {
-        imagedestroy($this->file);
+        if ($this->file) {
+            imagedestroy($this->file);
+        }
         $this->file = null;
     }
 
