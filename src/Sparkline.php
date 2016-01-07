@@ -353,7 +353,9 @@ class Sparkline
         ob_start();
         imagepng($this->file);
         $buffer = ob_get_clean();
-        ob_end_clean();
+        if (ob_get_length()) {
+            ob_end_clean();
+        }
         return base64_encode($buffer);
     }
 
