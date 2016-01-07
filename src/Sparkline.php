@@ -341,6 +341,21 @@ class Sparkline
         }
         imagepng($this->file, $savePath);
     }
+    
+    /**
+     * @return string
+     */
+    public function toBase64()
+    {
+        if (!$this->file) {
+            $this->generate();
+        }
+        ob_start();
+        imagepng($this->file);
+        $buffer = ob_get_clean();
+        ob_end_clean();
+        return base64_encode($buffer);
+    }
 
     public function destroy()
     {
