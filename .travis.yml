@@ -1,12 +1,23 @@
 language: php
+
+addons:
+    code_climate:
+        repo_token: 3b0878715671c2e346688330ab3b1f96c9f92b722d5bd9b4d2901fb39e6698b2
+
 php:
     - 5.3
     - 5.4
     - 5.5
     - 5.6
+
 before_install:
     - curl -sS https://getcomposer.org/installer | php
+
 install:
-    - php composer.phar install
+    - php composer.phar install --dev
+
 script:
-    - phpunit .
+    - phpunit --coverage-clover build/logs/clover.xml
+
+after_script:
+    - vendor/bin/test-reporter
