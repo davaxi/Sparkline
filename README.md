@@ -35,7 +35,7 @@ You can install the library by adding it as a dependency to your composer.json.
 The library is available on [GitHub](https://github.com/davaxi/Sparkline). You can clone it into a local repository with the git clone command.
 
 ```
-git clone https://github.com/google/google-api-php-client.git
+git clone https://github.com/davaxi/Sparkline.git
 ```
 
 ### What to do with the files
