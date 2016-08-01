@@ -6,6 +6,9 @@ PHP Class (using GD) to generate sparklines
 [![Total Downloads](https://poser.pugx.org/davaxi/sparkline/downloads)](https://packagist.org/packages/davaxi/sparkline) 
 [![Latest Unstable Version](https://poser.pugx.org/davaxi/sparkline/v/unstable)](https://packagist.org/packages/davaxi/sparkline) 
 [![License](https://poser.pugx.org/davaxi/sparkline/license)](https://packagist.org/packages/davaxi/sparkline)
+[![Code Climate](https://codeclimate.com/github/davaxi/Sparkline/badges/gpa.svg)](https://codeclimate.com/github/davaxi/Sparkline)
+[![Test Coverage](https://codeclimate.com/github/davaxi/Sparkline/badges/coverage.svg)](https://codeclimate.com/github/davaxi/Sparkline/coverage)
+[![Issue Count](https://codeclimate.com/github/davaxi/Sparkline/badges/issue_count.svg)](https://codeclimate.com/github/davaxi/Sparkline)
 
 ## Installation
 
