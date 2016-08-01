@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Sparkline by davaxi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Sparkline</h1>
+      <h2 class="project-tagline">PHP Class (using GD) to generate sparklines</h2>
+      <a href="https://github.com/davaxi/Sparkline" class="btn">View on GitHub</a>
+      <a href="https://github.com/davaxi/Sparkline/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/davaxi/Sparkline/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <p><a href="https://travis-ci.org/davaxi/Sparkline"><img src="https://travis-ci.org/davaxi/Sparkline.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/davaxi/sparkline"><img src="https://poser.pugx.org/davaxi/sparkline/v/stable" alt="Latest Stable Version"></a> 
+<a href="https://packagist.org/packages/davaxi/sparkline"><img src="https://poser.pugx.org/davaxi/sparkline/downloads" alt="Total Downloads"></a> 
+<a href="https://packagist.org/packages/davaxi/sparkline"><img src="https://poser.pugx.org/davaxi/sparkline/v/unstable" alt="Latest Unstable Version"></a> 
+<a href="https://packagist.org/packages/davaxi/sparkline"><img src="https://poser.pugx.org/davaxi/sparkline/license" alt="License"></a></p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>This page contains information about installing the Library for PHP.</p>
+
+<h3>
+<a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Requirements</h3>
+
+<ul>
+<li>PHP version 5.3.0 or greater</li>
+<li>The GD PHP extension</li>
+</ul>
+
+<h3>
+<a id="obtaining-the-client-library" class="anchor" href="#obtaining-the-client-library" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Obtaining the client library</h3>
+
+<p>There are two options for obtaining the files for the client library.</p>
+
+<h4>
+<a id="using-composer" class="anchor" href="#using-composer" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using Composer</h4>
+
+<p>You can install the library by adding it as a dependency to your composer.json.</p>
+
+<pre><code>  "require": {
+    "davaxi/sparkline": "^1.0"
+  }
+</code></pre>
+
+<h4>
+<a id="cloning-from-github" class="anchor" href="#cloning-from-github" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Cloning from GitHub</h4>
+
+<p>The library is available on <a href="https://github.com/davaxi/Sparkline">GitHub</a>. You can clone it into a local repository with the git clone command.</p>
+
+<pre><code>git clone https://github.com/davaxi/Sparkline.git
+</code></pre>
+
+<h3>
+<a id="what-to-do-with-the-files" class="anchor" href="#what-to-do-with-the-files" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What to do with the files</h3>
+
+<p>After obtaining the files, ensure they are available to your code. If you're using Composer, this is handled for you automatically. If not, you will need to add the <code>autoload.php</code> file inside the client library.</p>
+
+<pre><code>require '/path/to/sparkline/folder/autoload.php';
+</code></pre>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>Exemple: </p>
+
+<p><img src="https://raw.githubusercontent.com/davaxi/Sparkline/master/tests/data/testGenerate2-mockup.png" alt="Sparkline"></p>
+
+<pre><code>&lt;?php
+
+require '/path/to/sparkline/folder/autoload.php';
+
+$sparkline = new Davaxi\Sparkline();
+$sparkline-&gt;setData(array(2,4,5,6,10,7,8,5,7,7,11,8,6,9,11,9,13,14,12,16));
+$sparkline-&gt;display();
+
+?&gt;
+</code></pre>
+
+<h2>
+<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Documentation</h2>
+
+<pre><code>$sparkline = new Davaxi\Sparkline();
+
+// Change format (Default value 80x20)
+$sparkline-&gt;setFormat('100x40');
+// or 
+$sparkline-&gt;setWidth(100);
+$sparkline-&gt;setHeight(40);
+
+// Change background color (Default value #FFFFFF)
+$sparkline-&gt;setBackgroundColorHex('#0f354b');
+// or
+$sparkline-&gt;setBackgroundColorRGB(15, 53, 75);
+
+// Change line color (Default value #1388db)
+$sparkline-&gt;setLineColorHex('#1c628b');
+// or
+$sparkline-&gt;setLineColorRGB(28, 98, 139);
+
+// Change line thickness (Default value 1.75 px)
+$sparkline-&gt;setLineThickness(2.2);
+
+// Change fill color (Default value #e6f2fa)
+$sparkline-&gt;setLineColorHex('#8b1c2b');
+// or
+$sparkline-&gt;setLineColorRGB(139, 28, 43);
+
+$sparkline-&gt;setData(array(.....)); // Set data set
+$sparkline-&gt;generate(); // If ou want regenerate picture 
+
+// If display
+$sparkline-&gt;setEtag('your hash'); // If you want add ETag header
+$sparkline-&gt;setFilename('yourPictureName'); // For filenamen header
+$sparkline-&gt;setExpire('+1 day'); // If you want add expire header
+// or
+$sparkline-&gt;setExpire(strtotime('+1 day'));
+$sparkline-&gt;display(); // Display with correctly headers
+
+// If save
+$sparkline-&gt;save('/your/path/to/save/picture');
+
+$sparkline-&gt;destroy(); // Destroy picture after generated / displayed / saved
+</code></pre>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/davaxi/Sparkline">Sparkline</a> is maintained by <a href="https://github.com/davaxi">davaxi</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
