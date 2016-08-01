@@ -59,7 +59,7 @@ class Sparkline
      * @var string
      * ex: QUERY_STRING if dedicated url
      */
-    protected $ETag = null;
+    protected $eTag = null;
 
     /**
      * @var int
@@ -77,7 +77,13 @@ class Sparkline
     protected $file;
 
     /**
+     * @var array
+     */
+    protected $server = array();
+
+    /**
      * Sparkline constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -87,16 +93,15 @@ class Sparkline
     }
 
     /**
-     * @param string $ETag
+     * @param string $eTag
      */
-    public function setETag($ETag)
+    public function setETag($eTag)
     {
-        if (is_null($ETag)) {
-            $this->ETag = null;
+        if (is_null($eTag)) {
+            $this->eTag = null;
+            return;
         }
-        else {
-            $this->ETag = md5($ETag);
-        }
+        $this->eTag = md5($eTag);
     }
 
     /**
@@ -145,13 +150,13 @@ class Sparkline
     {
         if (is_null($expire)) {
             $this->expire = null;
+            return;
         }
         if (is_numeric($expire)) {
             $this->expire = $expire;
+            return;
         }
-        else {
-            $this->expire = strtotime($expire);
-        }
+        $this->expire = strtotime($expire);
     }
 
     /**
@@ -159,7 +164,7 @@ class Sparkline
      */
     public function setBackgroundColorHex($color)
     {
-        list($red, $green, $blue) = Sparkline::ColorHexToRGB($color);
+        list($red, $green, $blue) = $this->colorHexToRGB($color);
         $this->setBackgroundColorRGB($red, $green, $blue);
     }
 
@@ -178,7 +183,7 @@ class Sparkline
      */
     public function setLineColorHex($color)
     {
-        list($red, $green, $blue) = Sparkline::ColorHexToRGB($color);
+        list($red, $green, $blue) = $this->colorHexToRGB($color);
         $this->setLineColorRGB($red, $green, $blue);
     }
 
@@ -205,7 +210,7 @@ class Sparkline
      */
     public function setFillColorHex($color)
     {
-        list($red, $green, $blue) = Sparkline::ColorHexToRGB($color);
+        list($red, $green, $blue) = $this->colorHexToRGB($color);
         $this->setFillColorRGB($red, $green, $blue);
     }
 
@@ -228,13 +233,13 @@ class Sparkline
         $count = count($data);
         if (!$count) {
             $this->data = array(0, 0);
+            return;
         }
-        else if ($count < 2) {
+        if ($count < 2) {
             $this->data = array_fill(0, 2, $data[0]);
+            return;
         }
-        else {
-            $this->data = $data;
-        }
+        $this->data = $data;
     }
 
     /**
@@ -270,8 +275,8 @@ class Sparkline
             $this->data[$i] = max($minHeight, min($value, $maxHeight));
         }
 
-        $x1 = $x2 = 0;
-        $y1 = $height - $this->data[0];
+        $pictureX1 = $pictureX2 = 0;
+        $pictureY1 = $height - $this->data[0];
 
         $line = array();
 
@@ -280,29 +285,29 @@ class Sparkline
         $polygon[] = 0;
         $polygon[] = $height + 50;
         // First element
-        $polygon[] = $x1;
-        $polygon[] = $y1;
+        $polygon[] = $pictureX1;
+        $polygon[] = $pictureY1;
         for ($i = 1; $i < $count; $i++) {
-            $x2 = $x1 + $step;
-            $y2 = $height - $this->data[$i];
+            $pictureX2 = $pictureX1 + $step;
+            $pictureY2 = $height - $this->data[$i];
 
-            $line[] = array($x1, $y1, $x2, $y2);
+            $line[] = array($pictureX1, $pictureY1, $pictureX2, $pictureY2);
 
-            $polygon[] = $x2;
-            $polygon[] = $y2;
+            $polygon[] = $pictureX2;
+            $polygon[] = $pictureY2;
 
-            $x1 = $x2;
-            $y1 = $y2;
+            $pictureX1 = $pictureX2;
+            $pictureY1 = $pictureY2;
         }
         // Last
-        $polygon[] = $x2;
+        $polygon[] = $pictureX2;
         $polygon[] = $height + 50;
 
         imagefilledpolygon($picture, $polygon, $count + 2, $fillColor);
 
         foreach ($line as $i => $coordinates) {
-            list($x1, $y1, $x2, $y2) = $coordinates;
-            imageline($picture, $x1, $y1, $x2, $y2, $lineColor);
+            list($pictureX1, $pictureY1, $pictureX2, $pictureY2) = $coordinates;
+            imageline($picture, $pictureX1, $pictureY1, $pictureX2, $pictureY2, $lineColor);
         }
         $sparkline = imagecreatetruecolor($this->width, $this->height);
         imagecopyresampled($sparkline, $picture, 0, 0, 0, 0, $this->width, $this->height, $width, $height);
@@ -310,23 +315,45 @@ class Sparkline
         $this->file = $sparkline;
     }
 
+    /**
+     * @param array $server
+     */
+    public function setServer(array $server)
+    {
+        $this->server = $server;
+    }
+
+    /**
+     * @param $key
+     * @return mixed|null
+     */
+    public function getServerValue($key)
+    {
+        if (isset($this->server[$key])) {
+            return $this->server[$key];
+        }
+        return null;
+    }
+
     public function display()
     {
         if (!$this->file) {
             $this->generate();
         }
-        if ($this->ETag && isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
-            if ($_SERVER['HTTP_IF_NONE_MATCH'] == $this->ETag) {
-                header($_SERVER['SERVER_PROTOCOL'] . ' 304 Not Modified', true, 304);
-                exit();
+        $httpIfNoneMatch = $this->getServerValue('HTTP_IF_NONE_MATCH');
+        if ($this->eTag && $httpIfNoneMatch) {
+            if ($httpIfNoneMatch == $this->eTag) {
+                $serverProtocol = $this->getServerValue('SERVER_PROTOCOL');
+                header($serverProtocol . ' 304 Not Modified', true, 304);
+                return;
             }
         }
 
         header('Content-Type: image/png');
         header('Content-Disposition: inline; filename="' . $this->filename . '.png"');
         header('Accept-Ranges: none');
-        if ($this->ETag) {
-            header('ETag: ' . $this->ETag);
+        if ($this->eTag) {
+            header('ETag: ' . $this->eTag);
         }
         if (!is_null($this->expire)) {
             header('Expires: ' . gmdate('D, d M Y H:i:s T', $this->expire));
@@ -352,7 +379,7 @@ class Sparkline
         }
         ob_start();
         imagepng($this->file);
-        $buffer = ob_get_clean();
+        $buffer = ob_get_contents();
         if (ob_get_length()) {
             ob_end_clean();
         }
@@ -367,15 +394,14 @@ class Sparkline
         $this->file = null;
     }
 
-
     /**
      * @param string $color (hexadecimal)
      * @exceptions \InvalidArgumentException
      * @return array (r,g,b)
      */
-    protected static function ColorHexToRGB($color)
+    protected function colorHexToRGB($color)
     {
-        if (!Sparkline::checkColorHex($color)) {
+        if (!$this->checkColorHex($color)) {
             throw new \InvalidArgumentException('Invalid hexadecimal value ' . $color);
         }
 
