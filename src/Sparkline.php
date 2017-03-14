@@ -8,6 +8,11 @@ namespace Davaxi;
  */
 class Sparkline
 {
+    /**
+     * @var int
+     * Base of value
+     */
+    protected $base = null;
 
     /**
      * @var int
@@ -160,6 +165,23 @@ class Sparkline
     }
 
     /**
+     * @param $base
+     * Set base for values
+     */
+    public function setBase($base)
+    {
+        $this->base = $base;
+    }
+
+    /**
+     * Set background to transparent
+     */
+    public function deactivateBackgroundColor()
+    {
+        $this->backgroundColor = null;
+    }
+
+    /**
      * @param string $color (hexadecimal)
      */
     public function setBackgroundColorHex($color)
@@ -206,6 +228,14 @@ class Sparkline
     }
 
     /**
+     * Set fill color to transparent
+     */
+    public function deactivateFillColor()
+    {
+        $this->fillColor = null;
+    }
+
+    /**
      * @param string $color (hexadecimal)
      */
     public function setFillColorHex($color)
@@ -243,6 +273,14 @@ class Sparkline
     }
 
     /**
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
      * @return resource
      */
     public function generate()
@@ -253,12 +291,19 @@ class Sparkline
         $count = count($this->data);
         $step = $width / ($count - 1);
         $max = max($this->data);
+        if ($this->base) {
+            $max = $this->base;
+        }
 
         $picture = imagecreatetruecolor($width, $height);
-        $backgroundColor = imagecolorallocate($picture, $this->backgroundColor[0], $this->backgroundColor[1], $this->backgroundColor[2]);
-        $fillColor = imagecolorallocate($picture, $this->fillColor[0], $this->fillColor[1], $this->fillColor[2]);
+
+        $backgroundColor = imagecolorallocatealpha($picture, 0, 0, 0, 127);
+        if ($this->backgroundColor) {
+            $backgroundColor = imagecolorallocate($picture, $this->backgroundColor[0], $this->backgroundColor[1], $this->backgroundColor[2]);
+        }
         $lineColor = imagecolorallocate($picture, $this->lineColor[0], $this->lineColor[1], $this->lineColor[2]);
 
+        imagesavealpha($picture, true);
         imagefill($picture, 0, 0, $backgroundColor);
         imagesetthickness($picture, $lineThickness);
 
@@ -303,14 +348,19 @@ class Sparkline
         $polygon[] = $pictureX2;
         $polygon[] = $height + 50;
 
-        imagefilledpolygon($picture, $polygon, $count + 2, $fillColor);
+        if ($this->fillColor) {
+            $fillColor = imagecolorallocate($picture, $this->fillColor[0], $this->fillColor[1], $this->fillColor[2]);
+            imagefilledpolygon($picture, $polygon, $count + 2, $fillColor);
+        }
 
         foreach ($line as $i => $coordinates) {
             list($pictureX1, $pictureY1, $pictureX2, $pictureY2) = $coordinates;
             imageline($picture, $pictureX1, $pictureY1, $pictureX2, $pictureY2, $lineColor);
         }
         $sparkline = imagecreatetruecolor($this->width, $this->height);
+        imagealphablending($sparkline, false);
         imagecopyresampled($sparkline, $picture, 0, 0, 0, 0, $this->width, $this->height, $width, $height);
+        imagesavealpha($sparkline, true);
         imagedestroy($picture);
         $this->file = $sparkline;
     }
@@ -368,7 +418,7 @@ class Sparkline
         }
         imagepng($this->file, $savePath);
     }
-    
+
     /**
      * @return string
      */
