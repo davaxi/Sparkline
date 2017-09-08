@@ -320,7 +320,7 @@ class SparklineTest extends PHPUnit_Framework_TestCase
 
     public function testSave()
     {
-        $path = dirname(__FILE__) . '/data/testGenerate2.png';
+        $path = dirname(__FILE__) . '/data/testGenerateSave.png';
         $this->sparkline->setData(array(-1, 2,4,5,6,10,7,8,5,7,7,11,8,6,9,11,9,13,14,12,16));
         $this->sparkline->save($path);
 

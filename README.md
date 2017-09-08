@@ -82,6 +82,8 @@ $sparkline->setHeight(40);
 $sparkline->setBackgroundColorHex('#0f354b');
 // or
 $sparkline->setBackgroundColorRGB(15, 53, 75);
+// or
+$sparkline->deactivateBackgroundColor();
 
 // Change line color (Default value #1388db)
 $sparkline->setLineColorHex('#1c628b');
@@ -92,12 +94,18 @@ $sparkline->setLineColorRGB(28, 98, 139);
 $sparkline->setLineThickness(2.2);
 
 // Change fill color (Default value #e6f2fa)
-$sparkline->setLineColorHex('#8b1c2b');
+$sparkline->setFillColorHex('#8b1c2b');
 // or
-$sparkline->setLineColorRGB(139, 28, 43);
+$sparkline->setFillColorRGB(139, 28, 43);
+// or
+$sparkline->deactivateFillColor();
 
 $sparkline->setData(array(.....)); // Set data set
+$sparkline->getData(); // Get seted data
 $sparkline->generate(); // If ou want regenerate picture 
+
+// Change base of height value (default max($data))
+$sparkline->setBase(20);
 
 // If display
 $sparkline->setEtag('your hash'); // If you want add ETag header
