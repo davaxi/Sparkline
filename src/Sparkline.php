@@ -431,21 +431,23 @@ class Sparkline
             list($pictureX1, $pictureY1, $pictureX2, $pictureY2) = $coordinates;
             imageline($picture, $pictureX1, $pictureY1, $pictureX2, $pictureY2, $lineColor);
         }
-        if (isset($this->minimumColor) && isset($this->dotRadius)) {
-            $minimumColor = imagecolorallocate($picture, $this->minimumColor[0], $this->minimumColor[1], $this->minimumColor[2]);
-            imagefilledellipse($picture,
-                $minIndex * $step, $height - $this->data[$minIndex],
-                $this->dotRadius * $this->ratioComputing, $this->dotRadius * $this->ratioComputing,
-                $minimumColor
-            );
-        }
-        if (isset($this->maximumColor) && isset($this->dotRadius)) {
-            $maximumColor = imagecolorallocate($picture, $this->maximumColor[0], $this->maximumColor[1], $this->maximumColor[2]);
-            imagefilledellipse($picture,
-                $maxIndex * $step, $height - $this->data[$maxIndex],
-                $this->dotRadius * $this->ratioComputing, $this->dotRadius * $this->ratioComputing,
-                $maximumColor
-            );
+        if ($min != $max) {
+            if (isset($this->minimumColor) && isset($this->dotRadius)) {
+                $minimumColor = imagecolorallocate($picture, $this->minimumColor[0], $this->minimumColor[1], $this->minimumColor[2]);
+                imagefilledellipse($picture,
+                    $minIndex * $step, $height - $this->data[$minIndex],
+                    $this->dotRadius * $this->ratioComputing, $this->dotRadius * $this->ratioComputing,
+                    $minimumColor
+                );
+            }
+            if (isset($this->maximumColor) && isset($this->dotRadius)) {
+                $maximumColor = imagecolorallocate($picture, $this->maximumColor[0], $this->maximumColor[1], $this->maximumColor[2]);
+                imagefilledellipse($picture,
+                    $maxIndex * $step, $height - $this->data[$maxIndex],
+                    $this->dotRadius * $this->ratioComputing, $this->dotRadius * $this->ratioComputing,
+                    $maximumColor
+                );
+            }
         }
         $sparkline = imagecreatetruecolor($this->width, $this->height);
         imagealphablending($sparkline, false);
