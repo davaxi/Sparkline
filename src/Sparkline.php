@@ -27,6 +27,11 @@ class Sparkline
     protected $height = 20;
 
     /**
+     * @var int
+     */
+    protected $topOffset = 0;
+
+    /**
      * @var array (rgb)
      * Default: #ffffff
      */
@@ -152,6 +157,13 @@ class Sparkline
     public function setHeight($height)
     {
         $this->height = (int)$height;
+    }
+
+    /**
+     * @param int $topOffset
+     */
+    public function setTopOffset($topOffset) {
+        $this->topOffset = (int)$topOffset;
     }
 
     /**
@@ -377,7 +389,7 @@ class Sparkline
                 $value = 0;
             }
             if ($value > 0) {
-                $value = round($value / $max * $height);
+                $value = round($value / $max * ($height-$this->topOffset*$this->ratioComputing));
             }
             $this->data[$i] = max($minHeight, min($value, $maxHeight));
         }
