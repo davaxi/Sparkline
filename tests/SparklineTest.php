@@ -12,7 +12,6 @@ class SparklineMockup extends Sparkline
 
 class SparklineTest extends PHPUnit_Framework_TestCase
 {
-
     /**
      * @var SparklineMockup
      */
@@ -71,7 +70,7 @@ class SparklineTest extends PHPUnit_Framework_TestCase
 
     public function testServer()
     {
-        $expected = array('test' => 1);
+        $expected = ['test' => 1];
         $this->sparkline->setServer($expected);
         $value = $this->sparkline->getAttribute('server');
         $this->assertEquals($expected, $value);
@@ -79,7 +78,7 @@ class SparklineTest extends PHPUnit_Framework_TestCase
 
     public function testGetServerValue()
     {
-        $server = array('test' => 1);
+        $server = ['test' => 1];
         $this->sparkline->setServer($server);
         $value = $this->sparkline->getServerValue('test');
         $this->assertEquals(1, $value);
@@ -132,19 +131,18 @@ class SparklineTest extends PHPUnit_Framework_TestCase
     {
         $this->sparkline->setBackgroundColorHex('#0f354b');
         $color = $this->sparkline->getAttribute('backgroundColor');
-        $this->assertEquals(array(15, 53, 75), $color);
+        $this->assertEquals([15, 53, 75], $color);
 
         $this->sparkline->setBackgroundColorHex('#666');
         $color = $this->sparkline->getAttribute('backgroundColor');
-        $this->assertEquals(array(102, 102, 102), $color);
-
+        $this->assertEquals([102, 102, 102], $color);
     }
 
     public function testSetBackgroundColorRGB()
     {
         $this->sparkline->setBackgroundColorRGB(123, 233, 199);
         $color = $this->sparkline->getAttribute('backgroundColor');
-        $this->assertEquals(array(123, 233, 199), $color);
+        $this->assertEquals([123, 233, 199], $color);
     }
 
     /**
@@ -159,18 +157,18 @@ class SparklineTest extends PHPUnit_Framework_TestCase
     {
         $this->sparkline->setLineColorHex('#0f354b');
         $color = $this->sparkline->getAttribute('lineColor');
-        $this->assertEquals(array(15, 53, 75), $color);
+        $this->assertEquals([15, 53, 75], $color);
 
         $this->sparkline->setLineColorHex('#666');
         $color = $this->sparkline->getAttribute('lineColor');
-        $this->assertEquals(array(102, 102, 102), $color);
+        $this->assertEquals([102, 102, 102], $color);
     }
 
     public function testSetLineColorRGB()
     {
         $this->sparkline->setLineColorRGB(123, 233, 199);
         $color = $this->sparkline->getAttribute('lineColor');
-        $this->assertEquals(array(123, 233, 199), $color);
+        $this->assertEquals([123, 233, 199], $color);
     }
 
     /**
@@ -185,18 +183,18 @@ class SparklineTest extends PHPUnit_Framework_TestCase
     {
         $this->sparkline->setFillColorHex('#0f354b');
         $color = $this->sparkline->getAttribute('fillColor');
-        $this->assertEquals(array(15, 53, 75), $color);
+        $this->assertEquals([15, 53, 75], $color);
 
         $this->sparkline->setFillColorHex('#666');
         $color = $this->sparkline->getAttribute('fillColor');
-        $this->assertEquals(array(102, 102, 102), $color);
+        $this->assertEquals([102, 102, 102], $color);
     }
 
     public function testSetFillColorRGB()
     {
         $this->sparkline->setFillColorRGB(123, 233, 199);
         $color = $this->sparkline->getAttribute('fillColor');
-        $this->assertEquals(array(123, 233, 199), $color);
+        $this->assertEquals([123, 233, 199], $color);
     }
 
     public function testSetLineThickness()
@@ -208,21 +206,21 @@ class SparklineTest extends PHPUnit_Framework_TestCase
 
     public function testSetData()
     {
-        $this->sparkline->setData(array());
+        $this->sparkline->setData([]);
         $data = $this->sparkline->getAttribute('data');
-        $this->assertEquals(array(0,0), $data);
+        $this->assertEquals([0,0], $data);
 
-        $this->sparkline->setData(array(1));
+        $this->sparkline->setData([1]);
         $data = $this->sparkline->getAttribute('data');
-        $this->assertEquals(array(1,1), $data);
+        $this->assertEquals([1,1], $data);
 
-        $this->sparkline->setData(array(1, 2));
+        $this->sparkline->setData([1, 2]);
         $data = $this->sparkline->getAttribute('data');
-        $this->assertEquals(array(1,2), $data);
+        $this->assertEquals([1,2], $data);
 
-        $this->sparkline->setData(array(1, 3, 5));
+        $this->sparkline->setData([1, 3, 5]);
         $data = $this->sparkline->getAttribute('data');
-        $this->assertEquals(array(1, 3, 5), $data);
+        $this->assertEquals([1, 3, 5], $data);
     }
 
     /**
@@ -233,10 +231,10 @@ class SparklineTest extends PHPUnit_Framework_TestCase
         $eTag = uniqid();
         $this->sparkline->setETag($eTag);
         $this->sparkline->setServer(
-            array(
+            [
                 'SERVER_PROTOCOL' => 'HTTP/1.0',
                 'HTTP_IF_NONE_MATCH' => $this->sparkline->getAttribute('eTag'),
-            )
+            ]
         );
         $this->sparkline->display();
     }
@@ -250,10 +248,10 @@ class SparklineTest extends PHPUnit_Framework_TestCase
         $this->sparkline->setETag('Other Etag');
         $this->sparkline->setExpire('2016-01-01 00:00:00');
         $this->sparkline->setServer(
-            array(
+            [
                 'SERVER_PROTOCOL' => 'HTTP/1.0',
                 'HTTP_IF_NONE_MATCH' => $eTag,
-            )
+            ]
         );
         ob_start();
         $this->sparkline->display();
@@ -264,8 +262,8 @@ class SparklineTest extends PHPUnit_Framework_TestCase
         $this->assertContains('Content-Disposition: inline; filename="sparkline.png"', $headers);
         $this->assertContains('Accept-Ranges: none', $headers);
 
-        $path = dirname(__FILE__) . '/data/testGenerate.png';
-        $expectedPath = dirname(__FILE__) . '/data/testGenerate-mockup.png';
+        $path = __DIR__ . '/data/testGenerate.png';
+        $expectedPath = __DIR__ . '/data/testGenerate-mockup.png';
 
         file_put_contents($path, $picture);
         $md5 = md5_file($path);
@@ -277,8 +275,8 @@ class SparklineTest extends PHPUnit_Framework_TestCase
 
     public function Generate_empty()
     {
-        $path = dirname(__FILE__) . '/data/testGenerate.png';
-        $expectedPath = dirname(__FILE__) . '/data/testGenerate-mockup.png';
+        $path = __DIR__ . '/data/testGenerate.png';
+        $expectedPath = __DIR__ . '/data/testGenerate-mockup.png';
 
         $this->sparkline->generate();
         $file = $this->sparkline->getAttribute('file');
@@ -293,10 +291,10 @@ class SparklineTest extends PHPUnit_Framework_TestCase
 
     public function testGenerate_data()
     {
-        $path = dirname(__FILE__) . '/data/testGenerate2.png';
-        $expectedPath = dirname(__FILE__) . '/data/testGenerate2-mockup.png';
+        $path = __DIR__ . '/data/testGenerate2.png';
+        $expectedPath = __DIR__ . '/data/testGenerate2-mockup.png';
 
-        $this->sparkline->setData(array(2,4,5,6,10,7,8,5,7,7,11,8,6,9,11,9,13,14,12,16));
+        $this->sparkline->setData([2,4,5,6,10,7,8,5,7,7,11,8,6,9,11,9,13,14,12,16]);
         $this->sparkline->generate();
         $file = $this->sparkline->getAttribute('file');
         imagepng($file, $path);
@@ -310,7 +308,7 @@ class SparklineTest extends PHPUnit_Framework_TestCase
 
     public function testToBase64()
     {
-        $expectedPath = dirname(__FILE__) . '/data/testGenerate-mockup.png';
+        $expectedPath = __DIR__ . '/data/testGenerate-mockup.png';
         $expectedContent = file_get_contents($expectedPath);
         $expectedPathBase64 = base64_encode($expectedContent);
 
@@ -320,8 +318,8 @@ class SparklineTest extends PHPUnit_Framework_TestCase
 
     public function testSave()
     {
-        $path = dirname(__FILE__) . '/data/testGenerateSave.png';
-        $this->sparkline->setData(array(-1, 2,4,5,6,10,7,8,5,7,7,11,8,6,9,11,9,13,14,12,16));
+        $path = __DIR__ . '/data/testGenerateSave.png';
+        $this->sparkline->setData([-1, 2,4,5,6,10,7,8,5,7,7,11,8,6,9,11,9,13,14,12,16]);
         $this->sparkline->save($path);
 
         $this->assertFileExists($path);

@@ -3,26 +3,28 @@
 namespace Davaxi;
 
 /**
- * Class Sparkline
- * @package Davaxi
+ * Class Sparkline.
  */
 class Sparkline
 {
+    const MIN_DATA_LENGTH = 2;
+    const FORMAT_DIMENSION = 2;
+    const HEXADECIMAL_ALIAS_LENGTH = 3;
     /**
      * @var int
-     * Base of value
+     *          Base of value
      */
-    protected $base = null;
+    protected $base;
 
     /**
      * @var int
-     * Recommended: 50 < 800
+     *          Recommended: 50 < 800
      */
     protected $width = 80;
 
     /**
      * @var int
-     * Recommended: 20 < 800
+     *          Recommended: 20 < 800
      */
     protected $height = 20;
 
@@ -33,21 +35,21 @@ class Sparkline
 
     /**
      * @var array (rgb)
-     * Default: #ffffff
+     *            Default: #ffffff
      */
-    protected $backgroundColor = array(255, 255, 255);
+    protected $backgroundColor = [255, 255, 255];
 
     /**
      * @var array (rgb)
-     * Default: #1388db
+     *            Default: #1388db
      */
-    protected $lineColor = array(19, 136, 219);
+    protected $lineColor = [19, 136, 219];
 
     /**
      * @var array (rgb)
-     * Default: #e6f2fa
+     *            Default: #e6f2fa
      */
-    protected $fillColor = array(230, 242, 250);
+    protected $fillColor = [230, 242, 250];
 
     /**
      * @var array (rgb)
@@ -61,13 +63,13 @@ class Sparkline
 
     /**
      * @var float (px)
-     * Default: 5px
+     *            Default: 5px
      */
     protected $dotRadius = 5;
 
     /**
      * @var float (px)
-     * Default: 1.75px
+     *            Default: 1.75px
      */
     protected $lineThickness = 1.75;
 
@@ -79,18 +81,18 @@ class Sparkline
     /**
      * @var array
      */
-    protected $data = array(0, 0);
+    protected $data = [0, 0];
 
     /**
      * @var string
-     * ex: QUERY_STRING if dedicated url
+     *             ex: QUERY_STRING if dedicated url
      */
-    protected $eTag = null;
+    protected $eTag;
 
     /**
      * @var int
      */
-    protected $expire = null;
+    protected $expire;
 
     /**
      * @var string
@@ -105,10 +107,11 @@ class Sparkline
     /**
      * @var array
      */
-    protected $server = array();
+    protected $server = [];
 
     /**
      * Sparkline constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -123,8 +126,9 @@ class Sparkline
      */
     public function setETag($eTag)
     {
-        if (is_null($eTag)) {
+        if (null === $eTag) {
             $this->eTag = null;
+
             return;
         }
         $this->eTag = md5($eTag);
@@ -136,7 +140,7 @@ class Sparkline
     public function setFormat($format)
     {
         $values = explode('x', $format);
-        if (count($values) != 2) {
+        if (count($values) !== static::FORMAT_DIMENSION) {
             throw new \InvalidArgumentException('Invalid format params. Expected string Width x Height');
         }
         $this->setWidth($values[0]);
@@ -169,7 +173,7 @@ class Sparkline
 
     /**
      * @param string $filename
-     * Without extension
+     *                         Without extension
      */
     public function setFilename($filename)
     {
@@ -178,16 +182,18 @@ class Sparkline
 
     /**
      * @param string|int $expire
-     * time format or string format
+     *                           time format or string format
      */
     public function setExpire($expire)
     {
-        if (is_null($expire)) {
+        if (null === $expire) {
             $this->expire = null;
+
             return;
         }
         if (is_numeric($expire)) {
             $this->expire = $expire;
+
             return;
         }
         $this->expire = strtotime($expire);
@@ -203,7 +209,7 @@ class Sparkline
     }
 
     /**
-     * Set background to transparent
+     * Set background to transparent.
      */
     public function deactivateBackgroundColor()
     {
@@ -226,7 +232,7 @@ class Sparkline
      */
     public function setBackgroundColorRGB($red, $green, $blue)
     {
-        $this->backgroundColor = array($red, $green, $blue);
+        $this->backgroundColor = [$red, $green, $blue];
     }
 
     /**
@@ -245,7 +251,7 @@ class Sparkline
      */
     public function setLineColorRGB($red, $green, $blue)
     {
-        $this->lineColor= array($red, $green, $blue);
+        $this->lineColor= [$red, $green, $blue];
     }
 
     /**
@@ -257,7 +263,7 @@ class Sparkline
     }
 
     /**
-     * Set fill color to transparent
+     * Set fill color to transparent.
      */
     public function deactivateFillColor()
     {
@@ -280,13 +286,13 @@ class Sparkline
      */
     public function setFillColorRGB($red, $green, $blue)
     {
-        $this->fillColor = array($red, $green, $blue);
+        $this->fillColor = [$red, $green, $blue];
     }
 
     /**
      * @param float $dotRadius
      */
-    public function setDotRadius( $dotRadius)
+    public function setDotRadius($dotRadius)
     {
         $this->dotRadius = $dotRadius;
     }
@@ -307,7 +313,7 @@ class Sparkline
      */
     public function setMinimumColorRGB($red, $green, $blue)
     {
-        $this->minimumColor = array($red, $green, $blue);
+        $this->minimumColor = [$red, $green, $blue];
     }
 
     /**
@@ -326,7 +332,7 @@ class Sparkline
      */
     public function setMaximumColorRGB($red, $green, $blue)
     {
-        $this->maximumColor = array($red, $green, $blue);
+        $this->maximumColor = [$red, $green, $blue];
     }
 
     /**
@@ -337,11 +343,13 @@ class Sparkline
         $data = array_values($data);
         $count = count($data);
         if (!$count) {
-            $this->data = array(0, 0);
+            $this->data = [0, 0];
+
             return;
         }
-        if ($count < 2) {
+        if ($count < static::MIN_DATA_LENGTH) {
             $this->data = array_fill(0, 2, $data[0]);
+
             return;
         }
         $this->data = $data;
@@ -379,7 +387,12 @@ class Sparkline
 
         $backgroundColor = imagecolorallocatealpha($picture, 0, 0, 0, 127);
         if ($this->backgroundColor) {
-            $backgroundColor = imagecolorallocate($picture, $this->backgroundColor[0], $this->backgroundColor[1], $this->backgroundColor[2]);
+            $backgroundColor = imagecolorallocate(
+                $picture,
+                $this->backgroundColor[0],
+                $this->backgroundColor[1],
+                $this->backgroundColor[2]
+            );
         }
         $lineColor = imagecolorallocate($picture, $this->lineColor[0], $this->lineColor[1], $this->lineColor[2]);
 
@@ -403,20 +416,20 @@ class Sparkline
         $pictureX1 = $pictureX2 = 0;
         $pictureY1 = $height - $this->data[0];
 
-        $line = array();
+        $line = [];
 
-        $polygon = array();
+        $polygon = [];
         // Initialize
         $polygon[] = 0;
         $polygon[] = $height + 50;
         // First element
         $polygon[] = $pictureX1;
         $polygon[] = $pictureY1;
-        for ($i = 1; $i < $count; $i++) {
+        for ($i = 1; $i < $count; ++$i) {
             $pictureX2 = $pictureX1 + $step;
             $pictureY2 = $height - $this->data[$i];
 
-            $line[] = array($pictureX1, $pictureY1, $pictureX2, $pictureY2);
+            $line[] = [$pictureX1, $pictureY1, $pictureX2, $pictureY2];
 
             $polygon[] = $pictureX2;
             $polygon[] = $pictureY2;
@@ -437,27 +450,54 @@ class Sparkline
             list($pictureX1, $pictureY1, $pictureX2, $pictureY2) = $coordinates;
             imageline($picture, $pictureX1, $pictureY1, $pictureX2, $pictureY2, $lineColor);
         }
-        if ($min != $max) {
+        if ($min !== $max) {
             if (isset($this->minimumColor) && isset($this->dotRadius)) {
-                $minimumColor = imagecolorallocate($picture, $this->minimumColor[0], $this->minimumColor[1], $this->minimumColor[2]);
-                imagefilledellipse($picture,
-                    $minIndex * $step, $height - $this->data[$minIndex],
-                    $this->dotRadius * $this->ratioComputing, $this->dotRadius * $this->ratioComputing,
+                $minimumColor = imagecolorallocate(
+                    $picture,
+                    $this->minimumColor[0],
+                    $this->minimumColor[1],
+                    $this->minimumColor[2]
+                );
+                imagefilledellipse(
+                    $picture,
+                    $minIndex * $step,
+                    $height - $this->data[$minIndex],
+                    $this->dotRadius * $this->ratioComputing,
+                    $this->dotRadius * $this->ratioComputing,
                     $minimumColor
                 );
             }
             if (isset($this->maximumColor) && isset($this->dotRadius)) {
-                $maximumColor = imagecolorallocate($picture, $this->maximumColor[0], $this->maximumColor[1], $this->maximumColor[2]);
-                imagefilledellipse($picture,
-                    $maxIndex * $step, $height - $this->data[$maxIndex],
-                    $this->dotRadius * $this->ratioComputing, $this->dotRadius * $this->ratioComputing,
+                $maximumColor = imagecolorallocate(
+                    $picture,
+                    $this->maximumColor[0],
+                    $this->maximumColor[1],
+                    $this->maximumColor[2]
+                );
+                imagefilledellipse(
+                    $picture,
+                    $maxIndex * $step,
+                    $height - $this->data[$maxIndex],
+                    $this->dotRadius * $this->ratioComputing,
+                    $this->dotRadius * $this->ratioComputing,
                     $maximumColor
                 );
             }
         }
         $sparkline = imagecreatetruecolor($this->width, $this->height);
         imagealphablending($sparkline, false);
-        imagecopyresampled($sparkline, $picture, 0, 0, 0, 0, $this->width, $this->height, $width, $height);
+        imagecopyresampled(
+            $sparkline,
+            $picture,
+            0,
+            0,
+            0,
+            0,
+            $this->width,
+            $this->height,
+            $width,
+            $height
+        );
         imagesavealpha($sparkline, true);
         imagedestroy($picture);
         $this->file = $sparkline;
@@ -473,6 +513,7 @@ class Sparkline
 
     /**
      * @param $key
+     *
      * @return mixed|null
      */
     public function getServerValue($key)
@@ -480,6 +521,7 @@ class Sparkline
         if (isset($this->server[$key])) {
             return $this->server[$key];
         }
+
         return null;
     }
 
@@ -490,9 +532,10 @@ class Sparkline
         }
         $httpIfNoneMatch = $this->getServerValue('HTTP_IF_NONE_MATCH');
         if ($this->eTag && $httpIfNoneMatch) {
-            if ($httpIfNoneMatch == $this->eTag) {
+            if ($httpIfNoneMatch === $this->eTag) {
                 $serverProtocol = $this->getServerValue('SERVER_PROTOCOL');
                 header($serverProtocol . ' 304 Not Modified', true, 304);
+
                 return;
             }
         }
@@ -503,7 +546,7 @@ class Sparkline
         if ($this->eTag) {
             header('ETag: ' . $this->eTag);
         }
-        if (!is_null($this->expire)) {
+        if (null !== $this->expire) {
             header('Expires: ' . gmdate('D, d M Y H:i:s T', $this->expire));
         }
         imagepng($this->file);
@@ -531,6 +574,7 @@ class Sparkline
         if (ob_get_length()) {
             ob_end_clean();
         }
+
         return base64_encode($buffer);
     }
 
@@ -545,6 +589,7 @@ class Sparkline
     /**
      * @param string $color (hexadecimal)
      * @exceptions \InvalidArgumentException
+     *
      * @return array (r,g,b)
      */
     protected function colorHexToRGB($color)
@@ -553,22 +598,22 @@ class Sparkline
             throw new \InvalidArgumentException('Invalid hexadecimal value ' . $color);
         }
 
-        $color = strtolower($color);
+        $color = mb_strtolower($color);
         $color = ltrim($color, '#');
-        if (strlen($color) == 3) {
+        if (mb_strlen($color) === static::HEXADECIMAL_ALIAS_LENGTH) {
             $color = $color[0] . $color[0] . $color[1] . $color[1] . $color[2] . $color[2];
         }
         $color = hexdec($color);
-        return array(
+
+        return [
             0xFF & ($color >> 0x10), // Red
             0xFF & ($color >> 0x8), // Green
-            0xFF & $color // Blue
-        );
+            0xFF & $color, // Blue
+        ];
     }
 
     protected static function checkColorHex($color)
     {
         return preg_match('/^#?+[0-9a-f]{3}(?:[0-9a-f]{3})?$/i', $color);
     }
-
 }
