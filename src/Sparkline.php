@@ -162,7 +162,8 @@ class Sparkline
     /**
      * @param int $topOffset
      */
-    public function setTopOffset($topOffset) {
+    public function setTopOffset($topOffset)
+    {
         $this->topOffset = (int)$topOffset;
     }
 
@@ -285,14 +286,16 @@ class Sparkline
     /**
      * @param float $dotRadius
      */
-    public function setDotRadius( $dotRadius) {
+    public function setDotRadius( $dotRadius)
+    {
         $this->dotRadius = $dotRadius;
     }
 
     /**
      * @param string $color (hexadecimal)
      */
-    public function setMinimumColorHex($color) {
+    public function setMinimumColorHex($color)
+    {
         list($red, $green, $blue) = $this->colorHexToRGB($color);
         $this->setMinimumColorRGB($red, $green, $blue);
     }
@@ -302,14 +305,16 @@ class Sparkline
      * @param int $green
      * @param int $blue
      */
-    public function setMinimumColorRGB($red, $green, $blue) {
+    public function setMinimumColorRGB($red, $green, $blue)
+    {
         $this->minimumColor = array($red, $green, $blue);
     }
 
     /**
      * @param string $color (hexadecimal)
      */
-    public function setMaximumColorHex($color) {
+    public function setMaximumColorHex($color)
+    {
         list($red, $green, $blue) = $this->colorHexToRGB($color);
         $this->setMaximumColorRGB($red, $green, $blue);
     }
@@ -319,7 +324,8 @@ class Sparkline
      * @param int $green
      * @param int $blue
      */
-    public function setMaximumColorRGB($red, $green, $blue) {
+    public function setMaximumColorRGB($red, $green, $blue)
+    {
         $this->maximumColor = array($red, $green, $blue);
     }
 
@@ -360,11 +366,11 @@ class Sparkline
         $count = count($this->data);
         $step = $width / ($count - 1);
         $max = max($this->data);
-        $maxs = array_keys($this->data, $max);
-        $maxIndex = end($maxs);
+        $maxKeys = array_keys($this->data, $max);
+        $maxIndex = end($maxKeys);
         $min = min($this->data);
-        $mins = array_keys($this->data, $min);
-        $minIndex = end($mins);
+        $minKey = array_keys($this->data, $min);
+        $minIndex = end($minKey);
         if ($this->base) {
             $max = $this->base;
         }
