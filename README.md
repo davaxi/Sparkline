@@ -107,6 +107,18 @@ $sparkline->generate(); // If ou want regenerate picture
 // Change base of height value (default max($data))
 $sparkline->setBase(20);
 
+// Add dot on minimal or maximal value
+// required
+$this->setDotRadius(2);
+
+// if want dot on minimal value
+$this->setMinimumColorHex('#8b1c2b');
+$this->setMinimumColorRGB(139, 28, 43);
+
+// If want dot on maximal value
+$this->setMaximumColorHex('#8b1c2b');
+$this->setMaximumColorRGB(139, 28, 43);
+
 // If display
 $sparkline->setEtag('your hash'); // If you want add ETag header
 $sparkline->setFilename('yourPictureName'); // For filenamen header
