@@ -8,11 +8,15 @@ php:
     - 5.4
     - 5.5
     - 5.6
+    - 7.0
+    - 7.1
 
 before_install:
     - curl -sS https://getcomposer.org/installer | php
 
 install:
+    - rm composer.json
+    - mv composer.travis.json composer.json
     - php composer.phar install --dev
 
 script:
