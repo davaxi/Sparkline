@@ -31,6 +31,11 @@ class Sparkline
     /**
      * @var int
      */
+    protected $padding = 0;
+
+    /**
+     * @var int
+     */
     protected $topOffset = 0;
 
     /**
@@ -60,6 +65,11 @@ class Sparkline
      * @var array (rgb)
      */
     protected $maximumColor;
+
+    /**
+     * @var array (rgb)
+     */
+    protected $lastPointColor;
 
     /**
      * @var float (px)
@@ -161,6 +171,14 @@ class Sparkline
     public function setHeight($height)
     {
         $this->height = (int)$height;
+    }
+
+    /**
+     * @param int $padding
+     */
+    public function setPadding($padding)
+    {
+        $this->padding = (int)$padding;
     }
 
     /**
@@ -336,6 +354,25 @@ class Sparkline
     }
 
     /**
+     * @param string $color (hexadecimal)
+     */
+    public function setLastPointColorHex($color)
+    {
+        list($red, $green, $blue) = $this->colorHexToRGB($color);
+        $this->setLastPointColorRGB($red, $green, $blue);
+    }
+
+    /**
+     * @param int $red
+     * @param int $green
+     * @param int $blue
+     */
+    public function setLastPointColorRGB($red, $green, $blue)
+    {
+        $this->lastPointColor = [$red, $green, $blue];
+    }
+
+    /**
      * @param array $data
      */
     public function setData(array $data)
@@ -370,6 +407,7 @@ class Sparkline
     {
         $width = $this->width * $this->ratioComputing;
         $height = $this->height * $this->ratioComputing;
+        $padding = $this->padding * $this->ratioComputing;
         $lineThickness = $this->lineThickness * $this->ratioComputing;
         $count = count($this->data);
         $step = $width / ($count - 1);
@@ -382,8 +420,7 @@ class Sparkline
         if ($this->base) {
             $max = $this->base;
         }
-
-        $picture = imagecreatetruecolor($width, $height);
+        $picture = imagecreatetruecolor($width + 2 * $padding, $height + 2 * $padding);
 
         $backgroundColor = imagecolorallocatealpha($picture, 0, 0, 0, 127);
         if ($this->backgroundColor) {
@@ -413,21 +450,21 @@ class Sparkline
             $this->data[$i] = max($minHeight, min($value, $maxHeight));
         }
 
-        $pictureX1 = $pictureX2 = 0;
-        $pictureY1 = $height - $this->data[0];
+        $pictureX1 = $pictureX2 = $padding;
+        $pictureY1 = $height + $padding - $this->data[0];
 
         $line = [];
 
         $polygon = [];
         // Initialize
-        $polygon[] = 0;
-        $polygon[] = $height + 50;
+        $polygon[] = $padding;
+        $polygon[] = $height + $padding;
         // First element
         $polygon[] = $pictureX1;
         $polygon[] = $pictureY1;
         for ($i = 1; $i < $count; ++$i) {
             $pictureX2 = $pictureX1 + $step;
-            $pictureY2 = $height - $this->data[$i];
+            $pictureY2 = $height + $padding - $this->data[$i];
 
             $line[] = [$pictureX1, $pictureY1, $pictureX2, $pictureY2];
 
@@ -439,7 +476,7 @@ class Sparkline
         }
         // Last
         $polygon[] = $pictureX2;
-        $polygon[] = $height + 50;
+        $polygon[] = $height + $padding;
 
         if ($this->fillColor) {
             $fillColor = imagecolorallocate($picture, $this->fillColor[0], $this->fillColor[1], $this->fillColor[2]);
@@ -460,10 +497,10 @@ class Sparkline
                 );
                 imagefilledellipse(
                     $picture,
-                    $minIndex * $step,
-                    $height - $this->data[$minIndex],
-                    $this->dotRadius * $this->ratioComputing,
-                    $this->dotRadius * $this->ratioComputing,
+                    $minIndex * $step + $padding,
+                    $height - $this->data[$minIndex] + $padding,
+                    2 * $this->dotRadius * $this->ratioComputing,
+                    2 * $this->dotRadius * $this->ratioComputing,
                     $minimumColor
                 );
             }
@@ -476,15 +513,31 @@ class Sparkline
                 );
                 imagefilledellipse(
                     $picture,
-                    $maxIndex * $step,
-                    $height - $this->data[$maxIndex],
-                    $this->dotRadius * $this->ratioComputing,
-                    $this->dotRadius * $this->ratioComputing,
+                    $maxIndex * $step + $padding,
+                    $height - $this->data[$maxIndex] + $padding,
+                    2 * $this->dotRadius * $this->ratioComputing,
+                    2 * $this->dotRadius * $this->ratioComputing,
                     $maximumColor
                 );
             }
         }
-        $sparkline = imagecreatetruecolor($this->width, $this->height);
+        if (isset($this->lastPointColor) && isset($this->dotRadius)) {
+            $lastPointColor = imagecolorallocate(
+                $picture,
+                $this->lastPointColor[0],
+                $this->lastPointColor[1],
+                $this->lastPointColor[2]
+            );
+            imagefilledellipse(
+                $picture,
+                ($count - 1) * $step + $padding,
+                $height - $this->data[$count - 1] + $padding,
+                2 * $this->dotRadius * $this->ratioComputing,
+                2 * $this->dotRadius * $this->ratioComputing,
+                $lastPointColor
+            );
+        }
+        $sparkline = imagecreatetruecolor($this->width + 2 * $this->padding, $this->height + 2 * $this->padding);
         imagealphablending($sparkline, false);
         imagecopyresampled(
             $sparkline,
@@ -493,10 +546,10 @@ class Sparkline
             0,
             0,
             0,
-            $this->width,
-            $this->height,
-            $width,
-            $height
+            $this->width + 2 * $this->padding,
+            $this->height + 2 * $this->padding,
+            $width + $this->ratioComputing * 2 * $this->padding,
+            $height + $this->ratioComputing * 2 * $this->padding
         );
         imagesavealpha($sparkline, true);
         imagedestroy($picture);

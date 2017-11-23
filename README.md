@@ -119,6 +119,10 @@ $this->setMinimumColorRGB(139, 28, 43);
 $this->setMaximumColorHex('#8b1c2b');
 $this->setMaximumColorRGB(139, 28, 43);
 
+// If want dot on last value
+$this->setLastPointColorHex('#8b1c2b');
+$this->setLastPointColorRGB(139, 28, 43);
+
 // If display
 $sparkline->setEtag('your hash'); // If you want add ETag header
 $sparkline->setFilename('yourPictureName'); // For filenamen header
