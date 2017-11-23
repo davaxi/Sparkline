@@ -62,6 +62,11 @@ class Sparkline
     protected $maximumColor;
 
     /**
+     * @var array (rgb)
+     */
+    protected $lastPointColor;
+
+    /**
      * @var float (px)
      *            Default: 5px
      */
@@ -336,6 +341,25 @@ class Sparkline
     }
 
     /**
+     * @param string $color (hexadecimal)
+     */
+    public function setLastPointColorHex($color)
+    {
+        list($red, $green, $blue) = $this->colorHexToRGB($color);
+        $this->setLastPointColorRGB($red, $green, $blue);
+    }
+
+    /**
+     * @param int $red
+     * @param int $green
+     * @param int $blue
+     */
+    public function setLastPointColorRGB($red, $green, $blue)
+    {
+        $this->lastPointColor = [$red, $green, $blue];
+    }
+
+    /**
      * @param array $data
      */
     public function setData(array $data)
@@ -483,6 +507,22 @@ class Sparkline
                     $maximumColor
                 );
             }
+        }
+        if (isset($this->lastPointColor) && isset($this->dotRadius)) {
+            $lastPointColor = imagecolorallocate(
+                $picture,
+                $this->lastPointColor[0],
+                $this->lastPointColor[1],
+                $this->lastPointColor[2]
+            );
+            imagefilledellipse(
+                $picture,
+                ($count - 1) * $step,
+                $height - $this->data[$count - 1],
+                $this->dotRadius * $this->ratioComputing,
+                $this->dotRadius * $this->ratioComputing,
+                $lastPointColor
+            );
         }
         $sparkline = imagecreatetruecolor($this->width, $this->height);
         imagealphablending($sparkline, false);
