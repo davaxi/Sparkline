@@ -107,6 +107,9 @@ $sparkline->generate(); // If ou want regenerate picture
 // Change base of height value (default max($data))
 $sparkline->setBase(20);
 
+// Change origin of chart value (yAxis) (default: 0)
+$sparkline->setOriginValue(40);
+
 // Add dot on minimal or maximal value
 // required
 $this->setDotRadius(2);
