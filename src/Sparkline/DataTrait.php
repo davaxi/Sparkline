@@ -117,4 +117,15 @@ trait DataTrait
 
         return [$minIndex, $min];
     }
+
+    /**
+     * @return array
+     */
+    protected function getExtremeValues()
+    {
+        list($minIndex, $min) = $this->getMinValue();
+        list($maxIndex, $max) = $this->getMaxValue();
+
+        return [$minIndex, $min, $maxIndex, $max];
+    }
 }

@@ -69,7 +69,7 @@ trait FormatTrait
     /**
      * @return int
      */
-    public function getNormalizedHeight()
+    protected function getNormalizedHeight()
     {
         return $this->height * $this->ratioComputing;
     }
@@ -80,6 +80,17 @@ trait FormatTrait
     protected function getNormalizedWidth()
     {
         return $this->width * $this->ratioComputing;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getNormalizedSize()
+    {
+        return [
+            $this->getNormalizedWidth(),
+            $this->getNormalizedHeight(),
+        ];
     }
 
     /**
@@ -94,14 +105,17 @@ trait FormatTrait
     }
 
     /**
+     * @param array $data
      * @param $height
      * @param $max
+     *
+     * @return array
      */
-    protected function computeDataForChartElements($height, $max)
+    protected function getDataForChartElements(array $data, $height, $max)
     {
         $minHeight = 1 * $this->ratioComputing;
         $maxHeight = $height - $minHeight;
-        foreach ($this->data as $i => $value) {
+        foreach ($data as $i => $value) {
             $value = (int)$value;
             if ($value <= 0) {
                 $value = 0;
@@ -109,21 +123,27 @@ trait FormatTrait
             if ($value > 0) {
                 $value = round($value / $max * ($height-$this->topOffset * $this->ratioComputing));
             }
-            $this->data[$i] = max($minHeight, min($value, $maxHeight));
+            $data[$i] = max($minHeight, min($value, $maxHeight));
         }
+
+        return $data;
     }
 
     /**
+     * @param array $data
      * @param $height
+     * @param $max
      * @param $step
      * @param $count
      *
      * @return array
      */
-    protected function getChartElements($height, $step, $count)
+    protected function getChartElements(array $data, $height, $max, $step, $count)
     {
+        $data = $this->getDataForChartElements($data, $height, $max);
+
         $pictureX1 = $pictureX2 = 0;
-        $pictureY1 = $height - $this->data[0];
+        $pictureY1 = $height - $data[0];
 
         $polygon = [];
         $line = [];
@@ -136,7 +156,7 @@ trait FormatTrait
         $polygon[] = $pictureY1;
         for ($i = 1; $i < $count; ++$i) {
             $pictureX2 = $pictureX1 + $step;
-            $pictureY2 = $height - $this->data[$i];
+            $pictureY2 = $height - $data[$i];
 
             $line[] = [$pictureX1, $pictureY1, $pictureX2, $pictureY2];
 

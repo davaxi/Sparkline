@@ -108,7 +108,7 @@ class Picture
     public function applyLine(array $line, array $lineColor)
     {
         $lineColor = $this->getLineColor($lineColor);
-        foreach ($line as $lineIndex => $coordinates) {
+        foreach ($line as $coordinates) {
             list($pictureX1, $pictureY1, $pictureX2, $pictureY2) = $coordinates;
             imageline($this->resource, $pictureX1, $pictureY1, $pictureX2, $pictureY2, $lineColor);
         }

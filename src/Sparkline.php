@@ -101,18 +101,13 @@ class Sparkline
 
     public function generate()
     {
-        $width = $this->getNormalizedWidth();
-        $height = $this->getNormalizedHeight();
+        list($width, $height) = $this->getNormalizedSize();
 
         $count = $this->getCount();
         $step = $this->getStepWidth($width, $count);
 
-        list($maxIndex, $max) = $this->getMaxValue();
-        list($minIndex, $min) = $this->getMinValue();
-
-        $this->computeDataForChartElements($height, $max);
-
-        list($polygon, $line) = $this->getChartElements($height, $step, $count);
+        list($minIndex, $min, $maxIndex, $max) = $this->getExtremeValues();
+        list($polygon, $line) = $this->getChartElements($this->data, $height, $max, $step, $count);
 
         $picture = new Picture($width, $height);
         $picture->applyBackground($this->backgroundColor);
