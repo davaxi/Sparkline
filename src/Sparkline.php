@@ -107,7 +107,7 @@ class Sparkline
         $step = $this->getStepWidth($width, $count);
 
         list($minIndex, $min, $maxIndex, $max) = $this->getExtremeValues();
-        list($polygon, $line) = $this->getChartElements($this->data, $height, $max, $step, $count);
+        list($polygon, $line) = $this->getChartElements($this->data, $max, $step);
 
         $picture = new Picture($width, $height);
         $picture->applyBackground($this->backgroundColor);

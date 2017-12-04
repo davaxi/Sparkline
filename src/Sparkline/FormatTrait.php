@@ -131,15 +131,15 @@ trait FormatTrait
 
     /**
      * @param array $data
-     * @param $height
      * @param $max
      * @param $step
-     * @param $count
      *
      * @return array
      */
-    protected function getChartElements(array $data, $height, $max, $step, $count)
+    protected function getChartElements(array $data, $max, $step)
     {
+        $count = count($data);
+        $height = $this->getNormalizedHeight();
         $data = $this->getDataForChartElements($data, $height, $max);
 
         $pictureX1 = $pictureX2 = 0;
