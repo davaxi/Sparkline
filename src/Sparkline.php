@@ -107,16 +107,9 @@ class Sparkline
         $count = $this->getCount();
         $step = $this->getStepWidth($width, $count);
 
-        $max = $this->getMaxValue();
-        $maxKeys = array_keys($this->data, $max);
-        $maxIndex = end($maxKeys);
+        list($maxIndex, $max) = $this->getMaxValue();
+        list($minIndex, $min) = $this->getMinValue();
 
-        $min = $this->getMinValue();
-        $minKey = array_keys($this->data, $min);
-        $minIndex = end($minKey);
-        if ($this->base) {
-            $max = $this->base;
-        }
         $this->computeDataForChartElements($height, $max);
 
         list($polygon, $line) = $this->getChartElements($height, $step, $count);
@@ -127,23 +120,19 @@ class Sparkline
         $picture->applyPolygon($polygon, $this->fillColor, $count);
         $picture->applyLine($line, $this->lineColor);
 
-        if ($min !== $max && isset($this->dotRadius)) {
-            if (isset($this->minimumColor)) {
-                $picture->applyDot(
-                    $minIndex * $step,
-                    $height - $this->data[$minIndex],
-                    $this->dotRadius * $this->ratioComputing,
-                    $this->minimumColor
-                );
-            }
-            if (isset($this->maximumColor)) {
-                $picture->applyDot(
-                    $maxIndex * $step,
-                    $height - $this->data[$maxIndex],
-                    $this->dotRadius * $this->ratioComputing,
-                    $this->maximumColor
-                );
-            }
+        if ($min !== $max) {
+            $picture->applyDot(
+                $minIndex * $step,
+                $height - $this->data[$minIndex],
+                $this->dotRadius * $this->ratioComputing,
+                $this->minimumColor
+            );
+            $picture->applyDot(
+                $maxIndex * $step,
+                $height - $this->data[$maxIndex],
+                $this->dotRadius * $this->ratioComputing,
+                $this->maximumColor
+            );
         }
 
         $this->file = $picture->generate($this->width, $this->height);
@@ -171,19 +160,32 @@ class Sparkline
         return null;
     }
 
-    public function display()
+    /**
+     * @return bool
+     */
+    protected function checkNoModified()
     {
-        if (!$this->file) {
-            $this->generate();
-        }
         $httpIfNoneMatch = $this->getServerValue('HTTP_IF_NONE_MATCH');
         if ($this->eTag && $httpIfNoneMatch) {
             if ($httpIfNoneMatch === $this->eTag) {
                 $serverProtocol = $this->getServerValue('SERVER_PROTOCOL');
                 header($serverProtocol . ' 304 Not Modified', true, 304);
 
-                return;
+                return true;
             }
+        }
+
+        return false;
+    }
+
+    public function display()
+    {
+        if (!$this->file) {
+            $this->generate();
+        }
+
+        if ($this->checkNoModified()) {
+            return;
         }
 
         header('Content-Type: image/png');

@@ -108,20 +108,24 @@ class Picture
     public function applyLine(array $line, array $lineColor)
     {
         $lineColor = $this->getLineColor($lineColor);
-        foreach ($line as $i => $coordinates) {
+        foreach ($line as $lineIndex => $coordinates) {
             list($pictureX1, $pictureY1, $pictureX2, $pictureY2) = $coordinates;
             imageline($this->resource, $pictureX1, $pictureY1, $pictureX2, $pictureY2, $lineColor);
         }
     }
 
     /**
-     * @param $x
-     * @param $y
+     * @param $positionX
+     * @param $positionY
      * @param $radius
      * @param array $color
      */
-    public function applyDot($x, $y, $radius, array $color)
+    public function applyDot($positionX, $positionY, $radius, $color)
     {
+        if (!$color || !$radius) {
+            return;
+        }
+
         $minimumColor = imagecolorallocate(
             $this->resource,
             $color[0],
@@ -130,8 +134,8 @@ class Picture
         );
         imagefilledellipse(
             $this->resource,
-            $x,
-            $y,
+            $positionX,
+            $positionY,
             $radius,
             $radius,
             $minimumColor

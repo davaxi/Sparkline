@@ -92,18 +92,29 @@ trait DataTrait
     }
 
     /**
-     * @return int
+     * @return array
      */
-    public function getMaxValue()
+    protected function getMaxValue()
     {
-        return max($this->data);
+        $max = max($this->data);
+        $maxKeys = array_keys($this->data, $max);
+        $maxIndex = end($maxKeys);
+        if ($this->base) {
+            $max = $this->base;
+        }
+
+        return [$maxIndex, $max];
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getMinValue()
+    protected function getMinValue()
     {
-        return min($this->data);
+        $min = min($this->data);
+        $minKey = array_keys($this->data, $min);
+        $minIndex = end($minKey);
+
+        return [$minIndex, $min];
     }
 }
