@@ -1,0 +1,155 @@
+<?php
+
+namespace Davaxi\Sparkline;
+
+/**
+ * Trait FormatTrait.
+ */
+trait FormatTrait
+{
+    /**
+     * @var int
+     *          Recommended: 50 < 800
+     */
+    protected $width = 80;
+
+    /**
+     * @var int
+     *          Recommended: 20 < 800
+     */
+    protected $height = 20;
+
+    /**
+     * @var int
+     */
+    protected $topOffset = 0;
+
+    /**
+     * @var int
+     */
+    protected $ratioComputing = 4;
+
+    /**
+     * @param string $format (Width x Height)
+     */
+    public function setFormat($format)
+    {
+        $values = explode('x', $format);
+        if (count($values) !== static::FORMAT_DIMENSION) {
+            throw new \InvalidArgumentException('Invalid format params. Expected string Width x Height');
+        }
+        $this->setWidth($values[0]);
+        $this->setHeight($values[1]);
+    }
+
+    /**
+     * @param int $width
+     */
+    public function setWidth($width)
+    {
+        $this->width = (int)$width;
+    }
+
+    /**
+     * @param int $height
+     */
+    public function setHeight($height)
+    {
+        $this->height = (int)$height;
+    }
+
+    /**
+     * @param int $topOffset
+     */
+    public function setTopOffset($topOffset)
+    {
+        $this->topOffset = (int)$topOffset;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNormalizedHeight()
+    {
+        return $this->height * $this->ratioComputing;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getNormalizedWidth()
+    {
+        return $this->width * $this->ratioComputing;
+    }
+
+    /**
+     * @param $width
+     * @param $count
+     *
+     * @return float|int
+     */
+    protected function getStepWidth($width, $count)
+    {
+        return $width / ($count - 1);
+    }
+
+    /**
+     * @param $height
+     * @param $max
+     */
+    protected function computeDataForChartElements($height, $max)
+    {
+        $minHeight = 1 * $this->ratioComputing;
+        $maxHeight = $height - $minHeight;
+        foreach ($this->data as $i => $value) {
+            $value = (int)$value;
+            if ($value <= 0) {
+                $value = 0;
+            }
+            if ($value > 0) {
+                $value = round($value / $max * ($height-$this->topOffset * $this->ratioComputing));
+            }
+            $this->data[$i] = max($minHeight, min($value, $maxHeight));
+        }
+    }
+
+    /**
+     * @param $height
+     * @param $step
+     * @param $count
+     *
+     * @return array
+     */
+    protected function getChartElements($height, $step, $count)
+    {
+        $pictureX1 = $pictureX2 = 0;
+        $pictureY1 = $height - $this->data[0];
+
+        $polygon = [];
+        $line = [];
+
+        // Initialize
+        $polygon[] = 0;
+        $polygon[] = $height + 50;
+        // First element
+        $polygon[] = $pictureX1;
+        $polygon[] = $pictureY1;
+        for ($i = 1; $i < $count; ++$i) {
+            $pictureX2 = $pictureX1 + $step;
+            $pictureY2 = $height - $this->data[$i];
+
+            $line[] = [$pictureX1, $pictureY1, $pictureX2, $pictureY2];
+
+            $polygon[] = $pictureX2;
+            $polygon[] = $pictureY2;
+
+            $pictureX1 = $pictureX2;
+            $pictureY1 = $pictureY2;
+        }
+        // Last
+        $polygon[] = $pictureX2;
+        $polygon[] = $height + 50;
+
+        return [$polygon, $line];
+    }
+}

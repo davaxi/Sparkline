@@ -2,86 +2,23 @@
 
 namespace Davaxi;
 
+use Davaxi\Sparkline\DataTrait;
+use Davaxi\Sparkline\FormatTrait;
+use Davaxi\Sparkline\Picture;
+use Davaxi\Sparkline\StyleTrait;
+
 /**
  * Class Sparkline.
  */
 class Sparkline
 {
+    use StyleTrait;
+    use DataTrait;
+    use FormatTrait;
+
     const MIN_DATA_LENGTH = 2;
     const FORMAT_DIMENSION = 2;
     const HEXADECIMAL_ALIAS_LENGTH = 3;
-    /**
-     * @var int
-     *          Base of value
-     */
-    protected $base;
-
-    /**
-     * @var int
-     *          Recommended: 50 < 800
-     */
-    protected $width = 80;
-
-    /**
-     * @var int
-     *          Recommended: 20 < 800
-     */
-    protected $height = 20;
-
-    /**
-     * @var int
-     */
-    protected $topOffset = 0;
-
-    /**
-     * @var array (rgb)
-     *            Default: #ffffff
-     */
-    protected $backgroundColor = [255, 255, 255];
-
-    /**
-     * @var array (rgb)
-     *            Default: #1388db
-     */
-    protected $lineColor = [19, 136, 219];
-
-    /**
-     * @var array (rgb)
-     *            Default: #e6f2fa
-     */
-    protected $fillColor = [230, 242, 250];
-
-    /**
-     * @var array (rgb)
-     */
-    protected $minimumColor;
-
-    /**
-     * @var array (rgb)
-     */
-    protected $maximumColor;
-
-    /**
-     * @var float (px)
-     *            Default: 5px
-     */
-    protected $dotRadius = 5;
-
-    /**
-     * @var float (px)
-     *            Default: 1.75px
-     */
-    protected $lineThickness = 1.75;
-
-    /**
-     * @var int
-     */
-    protected $ratioComputing = 4;
-
-    /**
-     * @var array
-     */
-    protected $data = [0, 0];
 
     /**
      * @var string
@@ -135,43 +72,6 @@ class Sparkline
     }
 
     /**
-     * @param string $format (Width x Height)
-     */
-    public function setFormat($format)
-    {
-        $values = explode('x', $format);
-        if (count($values) !== static::FORMAT_DIMENSION) {
-            throw new \InvalidArgumentException('Invalid format params. Expected string Width x Height');
-        }
-        $this->setWidth($values[0]);
-        $this->setHeight($values[1]);
-    }
-
-    /**
-     * @param int $width
-     */
-    public function setWidth($width)
-    {
-        $this->width = (int)$width;
-    }
-
-    /**
-     * @param int $height
-     */
-    public function setHeight($height)
-    {
-        $this->height = (int)$height;
-    }
-
-    /**
-     * @param int $topOffset
-     */
-    public function setTopOffset($topOffset)
-    {
-        $this->topOffset = (int)$topOffset;
-    }
-
-    /**
      * @param string $filename
      *                         Without extension
      */
@@ -199,308 +99,54 @@ class Sparkline
         $this->expire = strtotime($expire);
     }
 
-    /**
-     * @param $base
-     * Set base for values
-     */
-    public function setBase($base)
-    {
-        $this->base = $base;
-    }
-
-    /**
-     * Set background to transparent.
-     */
-    public function deactivateBackgroundColor()
-    {
-        $this->backgroundColor = null;
-    }
-
-    /**
-     * @param string $color (hexadecimal)
-     */
-    public function setBackgroundColorHex($color)
-    {
-        list($red, $green, $blue) = $this->colorHexToRGB($color);
-        $this->setBackgroundColorRGB($red, $green, $blue);
-    }
-
-    /**
-     * @param int $red
-     * @param int $green
-     * @param int $blue
-     */
-    public function setBackgroundColorRGB($red, $green, $blue)
-    {
-        $this->backgroundColor = [$red, $green, $blue];
-    }
-
-    /**
-     * @param string $color (hexadecimal)
-     */
-    public function setLineColorHex($color)
-    {
-        list($red, $green, $blue) = $this->colorHexToRGB($color);
-        $this->setLineColorRGB($red, $green, $blue);
-    }
-
-    /**
-     * @param int $red
-     * @param int $green
-     * @param int $blue
-     */
-    public function setLineColorRGB($red, $green, $blue)
-    {
-        $this->lineColor= [$red, $green, $blue];
-    }
-
-    /**
-     * @param float $thickness (in px)
-     */
-    public function setLineThickness($thickness)
-    {
-        $this->lineThickness = (float)$thickness;
-    }
-
-    /**
-     * Set fill color to transparent.
-     */
-    public function deactivateFillColor()
-    {
-        $this->fillColor = null;
-    }
-
-    /**
-     * @param string $color (hexadecimal)
-     */
-    public function setFillColorHex($color)
-    {
-        list($red, $green, $blue) = $this->colorHexToRGB($color);
-        $this->setFillColorRGB($red, $green, $blue);
-    }
-
-    /**
-     * @param int $red
-     * @param int $green
-     * @param int $blue
-     */
-    public function setFillColorRGB($red, $green, $blue)
-    {
-        $this->fillColor = [$red, $green, $blue];
-    }
-
-    /**
-     * @param float $dotRadius
-     */
-    public function setDotRadius($dotRadius)
-    {
-        $this->dotRadius = $dotRadius;
-    }
-
-    /**
-     * @param string $color (hexadecimal)
-     */
-    public function setMinimumColorHex($color)
-    {
-        list($red, $green, $blue) = $this->colorHexToRGB($color);
-        $this->setMinimumColorRGB($red, $green, $blue);
-    }
-
-    /**
-     * @param int $red
-     * @param int $green
-     * @param int $blue
-     */
-    public function setMinimumColorRGB($red, $green, $blue)
-    {
-        $this->minimumColor = [$red, $green, $blue];
-    }
-
-    /**
-     * @param string $color (hexadecimal)
-     */
-    public function setMaximumColorHex($color)
-    {
-        list($red, $green, $blue) = $this->colorHexToRGB($color);
-        $this->setMaximumColorRGB($red, $green, $blue);
-    }
-
-    /**
-     * @param int $red
-     * @param int $green
-     * @param int $blue
-     */
-    public function setMaximumColorRGB($red, $green, $blue)
-    {
-        $this->maximumColor = [$red, $green, $blue];
-    }
-
-    /**
-     * @param array $data
-     */
-    public function setData(array $data)
-    {
-        $data = array_values($data);
-        $count = count($data);
-        if (!$count) {
-            $this->data = [0, 0];
-
-            return;
-        }
-        if ($count < static::MIN_DATA_LENGTH) {
-            $this->data = array_fill(0, 2, $data[0]);
-
-            return;
-        }
-        $this->data = $data;
-    }
-
-    /**
-     * @return array
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    /**
-     * @return resource
-     */
     public function generate()
     {
-        $width = $this->width * $this->ratioComputing;
-        $height = $this->height * $this->ratioComputing;
-        $lineThickness = $this->lineThickness * $this->ratioComputing;
-        $count = count($this->data);
-        $step = $width / ($count - 1);
-        $max = max($this->data);
+        $width = $this->getNormalizedWidth();
+        $height = $this->getNormalizedHeight();
+
+        $count = $this->getCount();
+        $step = $this->getStepWidth($width, $count);
+
+        $max = $this->getMaxValue();
         $maxKeys = array_keys($this->data, $max);
         $maxIndex = end($maxKeys);
-        $min = min($this->data);
+
+        $min = $this->getMinValue();
         $minKey = array_keys($this->data, $min);
         $minIndex = end($minKey);
         if ($this->base) {
             $max = $this->base;
         }
+        $this->computeDataForChartElements($height, $max);
 
-        $picture = imagecreatetruecolor($width, $height);
+        list($polygon, $line) = $this->getChartElements($height, $step, $count);
 
-        $backgroundColor = imagecolorallocatealpha($picture, 0, 0, 0, 127);
-        if ($this->backgroundColor) {
-            $backgroundColor = imagecolorallocate(
-                $picture,
-                $this->backgroundColor[0],
-                $this->backgroundColor[1],
-                $this->backgroundColor[2]
-            );
-        }
-        $lineColor = imagecolorallocate($picture, $this->lineColor[0], $this->lineColor[1], $this->lineColor[2]);
+        $picture = new Picture($width, $height);
+        $picture->applyBackground($this->backgroundColor);
+        $picture->applyThickness($this->lineThickness * $this->ratioComputing);
+        $picture->applyPolygon($polygon, $this->fillColor, $count);
+        $picture->applyLine($line, $this->lineColor);
 
-        imagesavealpha($picture, true);
-        imagefill($picture, 0, 0, $backgroundColor);
-        imagesetthickness($picture, $lineThickness);
-
-        $minHeight = 1 * $this->ratioComputing;
-        $maxHeight = $height - $minHeight;
-        foreach ($this->data as $i => $value) {
-            $value = (int)$value;
-            if ($value <= 0) {
-                $value = 0;
-            }
-            if ($value > 0) {
-                $value = round($value / $max * ($height-$this->topOffset*$this->ratioComputing));
-            }
-            $this->data[$i] = max($minHeight, min($value, $maxHeight));
-        }
-
-        $pictureX1 = $pictureX2 = 0;
-        $pictureY1 = $height - $this->data[0];
-
-        $line = [];
-
-        $polygon = [];
-        // Initialize
-        $polygon[] = 0;
-        $polygon[] = $height + 50;
-        // First element
-        $polygon[] = $pictureX1;
-        $polygon[] = $pictureY1;
-        for ($i = 1; $i < $count; ++$i) {
-            $pictureX2 = $pictureX1 + $step;
-            $pictureY2 = $height - $this->data[$i];
-
-            $line[] = [$pictureX1, $pictureY1, $pictureX2, $pictureY2];
-
-            $polygon[] = $pictureX2;
-            $polygon[] = $pictureY2;
-
-            $pictureX1 = $pictureX2;
-            $pictureY1 = $pictureY2;
-        }
-        // Last
-        $polygon[] = $pictureX2;
-        $polygon[] = $height + 50;
-
-        if ($this->fillColor) {
-            $fillColor = imagecolorallocate($picture, $this->fillColor[0], $this->fillColor[1], $this->fillColor[2]);
-            imagefilledpolygon($picture, $polygon, $count + 2, $fillColor);
-        }
-
-        foreach ($line as $i => $coordinates) {
-            list($pictureX1, $pictureY1, $pictureX2, $pictureY2) = $coordinates;
-            imageline($picture, $pictureX1, $pictureY1, $pictureX2, $pictureY2, $lineColor);
-        }
-        if ($min !== $max) {
-            if (isset($this->minimumColor) && isset($this->dotRadius)) {
-                $minimumColor = imagecolorallocate(
-                    $picture,
-                    $this->minimumColor[0],
-                    $this->minimumColor[1],
-                    $this->minimumColor[2]
-                );
-                imagefilledellipse(
-                    $picture,
+        if ($min !== $max && isset($this->dotRadius)) {
+            if (isset($this->minimumColor)) {
+                $picture->applyDot(
                     $minIndex * $step,
                     $height - $this->data[$minIndex],
                     $this->dotRadius * $this->ratioComputing,
-                    $this->dotRadius * $this->ratioComputing,
-                    $minimumColor
+                    $this->minimumColor
                 );
             }
-            if (isset($this->maximumColor) && isset($this->dotRadius)) {
-                $maximumColor = imagecolorallocate(
-                    $picture,
-                    $this->maximumColor[0],
-                    $this->maximumColor[1],
-                    $this->maximumColor[2]
-                );
-                imagefilledellipse(
-                    $picture,
+            if (isset($this->maximumColor)) {
+                $picture->applyDot(
                     $maxIndex * $step,
                     $height - $this->data[$maxIndex],
                     $this->dotRadius * $this->ratioComputing,
-                    $this->dotRadius * $this->ratioComputing,
-                    $maximumColor
+                    $this->maximumColor
                 );
             }
         }
-        $sparkline = imagecreatetruecolor($this->width, $this->height);
-        imagealphablending($sparkline, false);
-        imagecopyresampled(
-            $sparkline,
-            $picture,
-            0,
-            0,
-            0,
-            0,
-            $this->width,
-            $this->height,
-            $width,
-            $height
-        );
-        imagesavealpha($sparkline, true);
-        imagedestroy($picture);
-        $this->file = $sparkline;
+
+        $this->file = $picture->generate($this->width, $this->height);
     }
 
     /**
@@ -584,36 +230,5 @@ class Sparkline
             imagedestroy($this->file);
         }
         $this->file = null;
-    }
-
-    /**
-     * @param string $color (hexadecimal)
-     * @exceptions \InvalidArgumentException
-     *
-     * @return array (r,g,b)
-     */
-    protected function colorHexToRGB($color)
-    {
-        if (!$this->checkColorHex($color)) {
-            throw new \InvalidArgumentException('Invalid hexadecimal value ' . $color);
-        }
-
-        $color = mb_strtolower($color);
-        $color = ltrim($color, '#');
-        if (mb_strlen($color) === static::HEXADECIMAL_ALIAS_LENGTH) {
-            $color = $color[0] . $color[0] . $color[1] . $color[1] . $color[2] . $color[2];
-        }
-        $color = hexdec($color);
-
-        return [
-            0xFF & ($color >> 0x10), // Red
-            0xFF & ($color >> 0x8), // Green
-            0xFF & $color, // Blue
-        ];
-    }
-
-    protected static function checkColorHex($color)
-    {
-        return preg_match('/^#?+[0-9a-f]{3}(?:[0-9a-f]{3})?$/i', $color);
     }
 }
