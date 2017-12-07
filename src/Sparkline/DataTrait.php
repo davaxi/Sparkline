@@ -94,7 +94,7 @@ trait DataTrait
     /**
      * @return array
      */
-    protected function getMaxValue()
+    protected function getMaxValueWithIndex()
     {
         $max = max($this->data);
         $maxKeys = array_keys($this->data, $max);
@@ -107,9 +107,21 @@ trait DataTrait
     }
 
     /**
+     * @return float
+     */
+    protected function getMaxValue()
+    {
+        if ($this->base) {
+            return $this->base;
+        }
+
+        return max($this->data);
+    }
+
+    /**
      * @return array
      */
-    protected function getMinValue()
+    protected function getMinValueWithIndex()
     {
         $min = min($this->data);
         $minKey = array_keys($this->data, $min);
@@ -123,8 +135,8 @@ trait DataTrait
      */
     protected function getExtremeValues()
     {
-        list($minIndex, $min) = $this->getMinValue();
-        list($maxIndex, $max) = $this->getMaxValue();
+        list($minIndex, $min) = $this->getMinValueWithIndex();
+        list($maxIndex, $max) = $this->getMaxValueWithIndex();
 
         return [$minIndex, $min, $maxIndex, $max];
     }
