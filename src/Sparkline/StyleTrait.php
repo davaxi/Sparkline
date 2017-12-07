@@ -26,22 +26,6 @@ trait StyleTrait
     protected $fillColor = [230, 242, 250];
 
     /**
-     * @var array (rgb)
-     */
-    protected $minimumColor;
-
-    /**
-     * @var array (rgb)
-     */
-    protected $maximumColor;
-
-    /**
-     * @var float (px)
-     *            Default: 5px
-     */
-    protected $dotRadius = 5;
-
-    /**
      * @var float (px)
      *            Default: 1.75px
      */
@@ -90,7 +74,7 @@ trait StyleTrait
      */
     public function setLineColorRGB($red, $green, $blue)
     {
-        $this->lineColor= [$red, $green, $blue];
+        $this->lineColor = [$red, $green, $blue];
     }
 
     /**
@@ -129,52 +113,6 @@ trait StyleTrait
     }
 
     /**
-     * @param float $dotRadius
-     */
-    public function setDotRadius($dotRadius)
-    {
-        $this->dotRadius = $dotRadius;
-    }
-
-    /**
-     * @param string $color (hexadecimal)
-     */
-    public function setMinimumColorHex($color)
-    {
-        list($red, $green, $blue) = $this->colorHexToRGB($color);
-        $this->setMinimumColorRGB($red, $green, $blue);
-    }
-
-    /**
-     * @param int $red
-     * @param int $green
-     * @param int $blue
-     */
-    public function setMinimumColorRGB($red, $green, $blue)
-    {
-        $this->minimumColor = [$red, $green, $blue];
-    }
-
-    /**
-     * @param string $color (hexadecimal)
-     */
-    public function setMaximumColorHex($color)
-    {
-        list($red, $green, $blue) = $this->colorHexToRGB($color);
-        $this->setMaximumColorRGB($red, $green, $blue);
-    }
-
-    /**
-     * @param int $red
-     * @param int $green
-     * @param int $blue
-     */
-    public function setMaximumColorRGB($red, $green, $blue)
-    {
-        $this->maximumColor = [$red, $green, $blue];
-    }
-
-    /**
      * @param string $color (hexadecimal)
      * @exceptions \InvalidArgumentException
      *
@@ -200,6 +138,11 @@ trait StyleTrait
         ];
     }
 
+    /**
+     * @param $color
+     *
+     * @return int
+     */
     protected static function checkColorHex($color)
     {
         return preg_match('/^#?+[0-9a-f]{3}(?:[0-9a-f]{3})?$/i', $color);

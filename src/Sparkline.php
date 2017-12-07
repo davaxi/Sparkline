@@ -5,6 +5,7 @@ namespace Davaxi;
 use Davaxi\Sparkline\DataTrait;
 use Davaxi\Sparkline\FormatTrait;
 use Davaxi\Sparkline\Picture;
+use Davaxi\Sparkline\PointTrait;
 use Davaxi\Sparkline\StyleTrait;
 
 /**
@@ -15,6 +16,7 @@ class Sparkline
     use StyleTrait;
     use DataTrait;
     use FormatTrait;
+    use PointTrait;
 
     const MIN_DATA_LENGTH = 2;
     const FORMAT_DIMENSION = 2;
@@ -106,7 +108,7 @@ class Sparkline
         $count = $this->getCount();
         $step = $this->getStepWidth($width, $count);
 
-        list($minIndex, $min, $maxIndex, $max) = $this->getExtremeValues();
+        list($maxIndex, $max) = $this->getMaxValue();
         list($polygon, $line) = $this->getChartElements($this->data, $max, $step);
 
         $picture = new Picture($width, $height);
@@ -115,18 +117,14 @@ class Sparkline
         $picture->applyPolygon($polygon, $this->fillColor, $count);
         $picture->applyLine($line, $this->lineColor);
 
-        if ($min !== $max) {
+        foreach ($this->points as $point) {
+            $isFirst = $point['index'] === 0;
+            $lineIndex = $isFirst ? 0 : $point['index'] - 1;
             $picture->applyDot(
-                $minIndex * $step,
-                $height - $this->data[$minIndex],
-                $this->dotRadius * $this->ratioComputing,
-                $this->minimumColor
-            );
-            $picture->applyDot(
-                $maxIndex * $step,
-                $height - $this->data[$maxIndex],
-                $this->dotRadius * $this->ratioComputing,
-                $this->maximumColor
+                $line[$lineIndex][$isFirst ? 0 : 2],
+                $line[$lineIndex][$isFirst ? 1 : 3],
+                $point['radius'] * $this->ratioComputing,
+                $point['color']
             );
         }
 

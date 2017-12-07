@@ -29,7 +29,7 @@ You can install the library by adding it as a dependency to your composer.json.
 
 ```
   "require": {
-    "davaxi/sparkline": "^1.0"
+    "davaxi/sparkline": "^1.1"
   }
 ```
 
@@ -110,17 +110,15 @@ $sparkline->setBase(20);
 // Change origin of chart value (yAxis) (default: 0)
 $sparkline->setOriginValue(40);
 
-// Add dot on minimal or maximal value
-// required
-$this->setDotRadius(2);
+// Add dot on first/last/minimal/maximal value
+// Data set before used method
+$sparkline->addPoint('minimum', 3, '#efefef');
+$sparkline->addPoint('maximum', 3, '#efefef');
+$sparkline->addPoint('first', 3, '#efefef');
+$sparkline->addPoint('last', 3, '#efefef');
 
-// if want dot on minimal value
-$this->setMinimumColorHex('#8b1c2b');
-$this->setMinimumColorRGB(139, 28, 43);
-
-// If want dot on maximal value
-$this->setMaximumColorHex('#8b1c2b');
-$this->setMaximumColorRGB(139, 28, 43);
+// Or by index
+$sparkline->addPoint(1, 3, '#efefef');
 
 // If display
 $sparkline->setEtag('your hash'); // If you want add ETag header

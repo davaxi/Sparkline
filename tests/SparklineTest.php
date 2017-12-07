@@ -11,7 +11,7 @@ class SparklineMockup extends Sparkline
 }
 
 /**
- * Class SparklineTest
+ * Class SparklineTest.
  */
 class SparklineTest extends SparklinePHPUnit
 {
@@ -320,6 +320,21 @@ class SparklineTest extends SparklinePHPUnit
 
         $value = $this->sparkline->toBase64();
         $this->assertEquals($expectedPathBase64, $value);
+    }
+
+    public function testPoints()
+    {
+        $path = __DIR__ . '/data/testGeneratePoints.png';
+        $this->sparkline->setData([-1, 2,4,5,6,10,7,8,5,7,7,11,8,6,9,11,9,13,14,12,16]);
+        $this->sparkline->addPoint(4, 4, '#6a737b');
+        $this->sparkline->addPoint('first', 3, '#fbb034');
+        $this->sparkline->addPoint('last', 3, '#008374');
+        $this->sparkline->addPoint('maximum', 5, '#ff4c4c');
+        $this->sparkline->addPoint('minimum', 5, '#0099e5');
+        $this->sparkline->save($path);
+
+        $this->assertFileExists($path);
+        unlink($path);
     }
 
     public function testSave()
