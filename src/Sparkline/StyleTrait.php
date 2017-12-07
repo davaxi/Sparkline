@@ -52,7 +52,7 @@ trait StyleTrait
      */
     public function deactivateBackgroundColor()
     {
-        $this->backgroundColor = null;
+        $this->backgroundColor = [];
     }
 
     /**
@@ -106,7 +106,7 @@ trait StyleTrait
      */
     public function deactivateFillColor()
     {
-        $this->fillColor = null;
+        $this->fillColor = [];
     }
 
     /**
