@@ -22,11 +22,6 @@ trait FormatTrait
     /**
      * @var int
      */
-    protected $topOffset = 0;
-
-    /**
-     * @var int
-     */
     protected $ratioComputing = 4;
 
     /**
@@ -56,14 +51,6 @@ trait FormatTrait
     public function setHeight($height)
     {
         $this->height = (int)$height;
-    }
-
-    /**
-     * @param int $topOffset
-     */
-    public function setTopOffset($topOffset)
-    {
-        $this->topOffset = (int)$topOffset;
     }
 
     /**
@@ -121,7 +108,7 @@ trait FormatTrait
                 $value = 0;
             }
             if ($value > 0) {
-                $value = round($value / $max * ($height-$this->topOffset * $this->ratioComputing));
+                $value = round($value / $max * $height);
             }
             $data[$i] = max($minHeight, min($value, $maxHeight));
         }
