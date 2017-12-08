@@ -21,6 +21,10 @@ class Sparkline
     const MIN_DATA_LENGTH = 2;
     const FORMAT_DIMENSION = 2;
     const HEXADECIMAL_ALIAS_LENGTH = 3;
+    const CSS_PADDING_ONE = 1;
+    const CSS_PADDING_TWO = 2;
+    const CSS_PADDING_THREE = 3;
+    const CSS_PADDING = 4;
 
     /**
      * @var string
@@ -106,10 +110,7 @@ class Sparkline
         list($width, $height) = $this->getNormalizedSize();
 
         $count = $this->getCount();
-        $step = $this->getStepWidth($width, $count);
-
-        $max = $this->getMaxValue();
-        list($polygon, $line) = $this->getChartElements($this->data, $max, $step);
+        list($polygon, $line) = $this->getChartElements($this->data);
 
         $picture = new Picture($width, $height);
         $picture->applyBackground($this->backgroundColor);

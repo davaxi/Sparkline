@@ -337,6 +337,18 @@ class SparklineTest extends SparklinePHPUnit
         unlink($path);
     }
 
+    public function testMargin()
+    {
+        $path = __DIR__ . '/data/testGenerateMargin.png';
+        $this->sparkline->setFormat('250x250');
+        $this->sparkline->setData([-1, 2,4,5,6,10,7,8,5,7,7,11,8,6,9,11,9,13,14,12,16]);
+        $this->sparkline->addPoint(4, 4, '#6a737b');
+        $this->sparkline->setPadding("10 20 30 40");
+        $this->sparkline->save($path);
+        $this->assertFileExists($path);
+        unlink($path);
+    }
+
     public function testSave()
     {
         $path = __DIR__ . '/data/testGenerateSave.png';

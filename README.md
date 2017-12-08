@@ -78,6 +78,12 @@ $sparkline->setFormat('100x40');
 $sparkline->setWidth(100);
 $sparkline->setHeight(40);
 
+// Apply padding
+$sparkline->setPadding('10'); // > top: 10 | right: 10 | bottom: 10 | left: 10
+$sparkline->setPadding('10 20'); // > top: 10 | right: 20 | bottom: 10 | left: 20
+$sparkline->setPadding('10 20 30'); // > top: 10 | right: 20 | bottom: 30 | left: 20
+$sparkline->setPadding('10 20 30 40'); // > top: 10 | right: 20 | bottom: 30 | left: 40
+
 // Change background color (Default value #FFFFFF)
 $sparkline->setBackgroundColorHex('#0f354b');
 // or

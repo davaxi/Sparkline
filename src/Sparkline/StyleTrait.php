@@ -139,6 +139,42 @@ trait StyleTrait
     }
 
     /**
+     * Formats:
+     *      all
+     *      vertical horizontal
+     *      top horizontal bottom
+     *      top right bottom left.
+     *
+     * @param string $padding
+     *
+     * @return array
+     */
+    protected function paddingStringToArray($padding)
+    {
+        $parts = explode(' ', $padding);
+        switch (count($parts)) {
+            case static::CSS_PADDING_ONE:
+                $value = (float)$parts[0];
+
+                return [$value, $value, $value, $value];
+                break;
+            case static::CSS_PADDING_TWO:
+                $verticalValue = (float)$parts[0];
+                $horizontalValue = (float)$parts[1];
+
+                return [$verticalValue, $horizontalValue, $verticalValue, $horizontalValue];
+            case static::CSS_PADDING_THREE:
+                $parts[3] = $parts[1];
+
+                return $parts;
+            case static::CSS_PADDING:
+                return $parts;
+            default:
+                throw new \InvalidArgumentException('Invalid padding format');
+        }
+    }
+
+    /**
      * @param $color
      *
      * @return int
