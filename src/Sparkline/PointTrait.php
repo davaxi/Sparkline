@@ -22,6 +22,9 @@ trait PointTrait
         $mapping = $this->getPointIndexMapping();
         if (array_key_exists($index, $mapping)) {
             $index = $mapping[$index];
+            if ($index < 0) {
+                return;
+            }
         }
         $this->checkPointIndex($index);
         $this->points[] = [
@@ -40,14 +43,10 @@ trait PointTrait
         list($minIndex, $min, $maxIndex, $max) = $this->getExtremeValues();
 
         $mapping = [];
-        if ($count > 1) {
-            $mapping['first'] = 0;
-            $mapping['last'] = $count - 1;
-        }
-        if ($min !== $max) {
-            $mapping['minimum'] = $minIndex;
-            $mapping['maximum'] = $maxIndex;
-        }
+        $mapping['first'] = $count > 1 ? 0 : -1;
+        $mapping['last'] = $count > 1 ? $count - 1 : -1;
+        $mapping['minimum'] = $min !== $max ? $minIndex : -1;
+        $mapping['maximum'] = $min !== $max ? $maxIndex : -1;
 
         return $mapping;
     }
