@@ -7,6 +7,8 @@ namespace Davaxi\Sparkline;
  */
 class Picture
 {
+    const DOT_RADIUS_TO_WIDTH = 2;
+
     /**
      * @var \resource
      */
@@ -136,8 +138,8 @@ class Picture
             $this->resource,
             $positionX,
             $positionY,
-            $radius,
-            $radius,
+            $radius * static::DOT_RADIUS_TO_WIDTH,
+            $radius * static::DOT_RADIUS_TO_WIDTH,
             $minimumColor
         );
     }
