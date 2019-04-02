@@ -110,7 +110,7 @@ class Sparkline
         list($width, $height) = $this->getNormalizedSize();
 
         $count = $this->getCount();
-        list($polygon, $line) = $this->getChartElements($this->data);
+        list($polygon, $line) = $this->getChartElements($this->getNormalizedData());
 
         $picture = new Picture($width, $height);
         $picture->applyBackground($this->backgroundColor);
