@@ -155,6 +155,12 @@ trait DataTrait
         return max($maxes);
     }
 
+    protected function getMaxNumberOfDataPointsAcrossSerieses()
+    {
+        $counts = array_map('count', $this->data);
+        return max($counts);
+    }
+
     /**
      * @return array
      */

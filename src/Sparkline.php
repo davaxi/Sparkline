@@ -115,8 +115,10 @@ class Sparkline
         $picture->applyBackground($this->backgroundColor);
         $picture->applyThickness($this->lineThickness * $this->ratioComputing);
 
+        $stepCount = $this->getMaxNumberOfDataPointsAcrossSerieses();
+
         foreach ($this->data as $seriesIndex => $series) {
-            list($polygon, $line) = $this->getChartElements($series);
+            list($polygon, $line) = $this->getChartElements($series, $stepCount);
             $picture->applyPolygon($polygon, $this->fillColor, $count);
 
             $lineColor = isset($this->lineColor[$seriesIndex]) ? $this->lineColor[$seriesIndex] : $this->lineColor[0];
