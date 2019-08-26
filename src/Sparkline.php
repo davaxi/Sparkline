@@ -123,6 +123,10 @@ class Sparkline
             $picture->applyLine($line, $lineColor);
 
             foreach ($this->points as $point) {
+                if ($point['series'] != $seriesIndex) {
+                    continue;
+                }
+
                 $isFirst = $point['index'] === 0;
                 $lineIndex = $isFirst ? 0 : $point['index'] - 1;
                 $picture->applyDot(

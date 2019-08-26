@@ -181,7 +181,7 @@ trait FormatTrait
      */
     protected function getDataForChartElements(array $data, $height)
     {
-        $max = $this->getMaxValue();
+        $max = $this->getMaxValueAcrossSeries();
         $minHeight = 1 * $this->ratioComputing;
         $maxHeight = $height - $minHeight;
         foreach ($data as $i => $value) {

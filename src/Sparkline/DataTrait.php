@@ -50,26 +50,31 @@ trait DataTrait
     public function setData()
     {
         $allSeries = func_get_args();
-        if (empty($allSeries)) {
-            return;
-        }
 
         $this->data = [];
         foreach ($allSeries as $data) {
-            $data = array_values($data);
-            $count = count($data);
-            if (!$count) {
-                $this->data[] = [0, 0];
-
-                return;
-            }
-            if ($count < static::MIN_DATA_LENGTH) {
-                $this->data[] = array_fill(0, 2, $data[0]);
-
-                return;
-            }
-            $this->data[] = $data;
+            $this->addSeries($data);
         }
+    }
+
+    /**
+     * @param array $data
+     */
+    public function addSeries($data)
+    {
+        $data = array_values($data);
+        $count = count($data);
+        if (!$count) {
+            $this->data[] = [0, 0];
+
+            return;
+        }
+        if ($count < static::MIN_DATA_LENGTH) {
+            $this->data[] = array_fill(0, 2, $data[0]);
+
+            return;
+        }
+        $this->data[] = $data;
     }
 
     /**
@@ -137,6 +142,20 @@ trait DataTrait
     }
 
     /**
+     * TODO: this could be cached somehow
+     * @return float
+     */
+    protected function getMaxValueAcrossSeries()
+    {
+        if ($this->base) {
+            return $this->base;
+        }
+
+        $maxes = array_map('max', $this->data);
+        return max($maxes);
+    }
+
+    /**
      * @return array
      */
     protected function getMinValueWithIndex($seriesIndex = 0)
@@ -151,10 +170,10 @@ trait DataTrait
     /**
      * @return array
      */
-    protected function getExtremeValues()
+    protected function getExtremeValues($seriesIndex = 0)
     {
-        list($minIndex, $min) = $this->getMinValueWithIndex();
-        list($maxIndex, $max) = $this->getMaxValueWithIndex();
+        list($minIndex, $min) = $this->getMinValueWithIndex($seriesIndex);
+        list($maxIndex, $max) = $this->getMaxValueWithIndex($seriesIndex);
 
         return [$minIndex, $min, $maxIndex, $max];
     }
