@@ -118,7 +118,9 @@ class Sparkline
         foreach ($this->data as $seriesIndex => $series) {
             list($polygon, $line) = $this->getChartElements($series);
             $picture->applyPolygon($polygon, $this->fillColor, $count);
-            $picture->applyLine($line, $this->lineColor[$seriesIndex]);
+
+            $lineColor = isset($this->lineColor[$seriesIndex]) ? $this->lineColor[$seriesIndex] : $this->lineColor[0];
+            $picture->applyLine($line, $lineColor);
 
             foreach ($this->points as $point) {
                 $isFirst = $point['index'] === 0;
