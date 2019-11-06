@@ -4,6 +4,8 @@ addons:
     code_climate:
         repo_token: 3b0878715671c2e346688330ab3b1f96c9f92b722d5bd9b4d2901fb39e6698b2
 
+dist: trusty
+
 php:
     - 5.4
     - 5.5
@@ -12,15 +14,15 @@ php:
     - 7.1
 
 before_install:
-    - curl -sS https://getcomposer.org/installer | php
+    - composer self-update
 
 install:
     - rm composer.json
     - mv composer.travis.json composer.json
-    - php composer.phar install --dev
+    - composer install
 
 script:
-    - phpunit --coverage-clover build/logs/clover.xml
+    - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
 after_script:
     - vendor/bin/test-reporter
