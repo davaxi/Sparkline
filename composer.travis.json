@@ -29,7 +29,8 @@
     "require-dev": {
         "php": ">=5.3.0",
         "codeclimate/php-test-reporter": "dev-master",
-        "ext-gd": "*"
+        "ext-gd": "*",
+        "phpunit/phpunit": "^4.8.36"
     },
     "autoload": {
         "psr-4": {

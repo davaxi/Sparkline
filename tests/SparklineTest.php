@@ -20,13 +20,13 @@ class SparklineTest extends SparklinePHPUnit
      */
     protected $sparkline;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->sparkline = new SparklineMockup();
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         parent::tearDown();
         $this->sparkline->destroy();
