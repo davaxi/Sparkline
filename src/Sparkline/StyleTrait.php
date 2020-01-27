@@ -135,6 +135,10 @@ trait StyleTrait
      */
     public function getFillColor($seriesIndex = 0)
     {
+        if (empty($this->fillColor)) {
+            return [];
+        }
+
         return isset($this->fillColor[$seriesIndex]) ? $this->fillColor[$seriesIndex] : $this->fillColor[0];
     }
 
