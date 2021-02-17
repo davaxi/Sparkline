@@ -17,13 +17,17 @@ trait StyleTrait
      * @var array (rgb)
      *            Default: #1388db
      */
-    protected $lineColor = [19, 136, 219];
+    protected $lineColor = [
+        [19, 136, 219],
+    ];
 
     /**
      * @var array (rgb)
      *            Default: #e6f2fa
      */
-    protected $fillColor = [230, 242, 250];
+    protected $fillColor = [
+        [230, 242, 250]
+    ];
 
     /**
      * @var float (px)
@@ -60,21 +64,23 @@ trait StyleTrait
 
     /**
      * @param string $color (hexadecimal)
+     * @param int $seriesIndex
      */
-    public function setLineColorHex($color)
+    public function setLineColorHex($color, $seriesIndex = 0)
     {
         list($red, $green, $blue) = $this->colorHexToRGB($color);
-        $this->setLineColorRGB($red, $green, $blue);
+        $this->setLineColorRGB($red, $green, $blue, $seriesIndex);
     }
 
     /**
      * @param int $red
      * @param int $green
      * @param int $blue
+     * @param int $seriesIndex
      */
-    public function setLineColorRGB($red, $green, $blue)
+    public function setLineColorRGB($red, $green, $blue, $seriesIndex = 0)
     {
-        $this->lineColor = [$red, $green, $blue];
+        $this->lineColor[$seriesIndex] = [$red, $green, $blue];
     }
 
     /**
@@ -83,6 +89,15 @@ trait StyleTrait
     public function setLineThickness($thickness)
     {
         $this->lineThickness = (float)$thickness;
+    }
+
+    /**
+     * @param int $seriesIndex
+     * @return array
+     */
+    public function getLineColor($seriesIndex = 0)
+    {
+        return isset($this->lineColor[$seriesIndex]) ? $this->lineColor[$seriesIndex] : $this->lineColor[0];
     }
 
     /**
@@ -95,21 +110,36 @@ trait StyleTrait
 
     /**
      * @param string $color (hexadecimal)
+     * @param int $seriesIndex
      */
-    public function setFillColorHex($color)
+    public function setFillColorHex($color, $seriesIndex = 0)
     {
         list($red, $green, $blue) = $this->colorHexToRGB($color);
-        $this->setFillColorRGB($red, $green, $blue);
+        $this->setFillColorRGB($red, $green, $blue, $seriesIndex);
     }
 
     /**
      * @param int $red
      * @param int $green
      * @param int $blue
+     * @param int $seriesIndex
      */
-    public function setFillColorRGB($red, $green, $blue)
+    public function setFillColorRGB($red, $green, $blue, $seriesIndex = 0)
     {
-        $this->fillColor = [$red, $green, $blue];
+        $this->fillColor[$seriesIndex] = [$red, $green, $blue];
+    }
+
+    /**
+     * @param int $seriesIndex
+     * @return array
+     */
+    public function getFillColor($seriesIndex = 0)
+    {
+        if (empty($this->fillColor)) {
+            return [];
+        }
+
+        return isset($this->fillColor[$seriesIndex]) ? $this->fillColor[$seriesIndex] : $this->fillColor[0];
     }
 
     /**

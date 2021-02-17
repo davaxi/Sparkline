@@ -20,13 +20,13 @@ class SparklineTest extends SparklinePHPUnit
      */
     protected $sparkline;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->sparkline = new SparklineMockup();
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         parent::tearDown();
         $this->sparkline->destroy();
@@ -160,18 +160,18 @@ class SparklineTest extends SparklinePHPUnit
     {
         $this->sparkline->setLineColorHex('#0f354b');
         $color = $this->sparkline->getAttribute('lineColor');
-        $this->assertEquals([15, 53, 75], $color);
+        $this->assertEquals([[15, 53, 75]], $color);
 
         $this->sparkline->setLineColorHex('#666');
         $color = $this->sparkline->getAttribute('lineColor');
-        $this->assertEquals([102, 102, 102], $color);
+        $this->assertEquals([[102, 102, 102]], $color);
     }
 
     public function testSetLineColorRGB()
     {
         $this->sparkline->setLineColorRGB(123, 233, 199);
         $color = $this->sparkline->getAttribute('lineColor');
-        $this->assertEquals([123, 233, 199], $color);
+        $this->assertEquals([[123, 233, 199]], $color);
     }
 
     /**
@@ -186,18 +186,18 @@ class SparklineTest extends SparklinePHPUnit
     {
         $this->sparkline->setFillColorHex('#0f354b');
         $color = $this->sparkline->getAttribute('fillColor');
-        $this->assertEquals([15, 53, 75], $color);
+        $this->assertEquals([[15, 53, 75]], $color);
 
         $this->sparkline->setFillColorHex('#666');
         $color = $this->sparkline->getAttribute('fillColor');
-        $this->assertEquals([102, 102, 102], $color);
+        $this->assertEquals([[102, 102, 102]], $color);
     }
 
     public function testSetFillColorRGB()
     {
         $this->sparkline->setFillColorRGB(123, 233, 199);
         $color = $this->sparkline->getAttribute('fillColor');
-        $this->assertEquals([123, 233, 199], $color);
+        $this->assertEquals([[123, 233, 199]], $color);
     }
 
     public function testSetLineThickness()
@@ -211,19 +211,19 @@ class SparklineTest extends SparklinePHPUnit
     {
         $this->sparkline->setData([]);
         $data = $this->sparkline->getAttribute('data');
-        $this->assertEquals([0,0], $data);
+        $this->assertEquals([[0,0]], $data);
 
         $this->sparkline->setData([1]);
         $data = $this->sparkline->getAttribute('data');
-        $this->assertEquals([1,1], $data);
+        $this->assertEquals([[1,1]], $data);
 
         $this->sparkline->setData([1, 2]);
         $data = $this->sparkline->getAttribute('data');
-        $this->assertEquals([1,2], $data);
+        $this->assertEquals([[1,2]], $data);
 
         $this->sparkline->setData([1, 3, 5]);
         $data = $this->sparkline->getAttribute('data');
-        $this->assertEquals([1, 3, 5], $data);
+        $this->assertEquals([[1, 3, 5]], $data);
     }
 
     /**

@@ -1,7 +1,7 @@
 {
     "name": "davaxi/sparkline",
     "description": "PHP Class (using GD) to generate sparklines",
-    "version": "1.1.2",
+    "version": "1.2.2",
     "type": "library",
     "keywords": [
         "sparkline",
@@ -23,11 +23,11 @@
     },
     "minimum-stability": "stable",
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=5.4.0",
         "ext-gd": "*"
     },
     "require-dev": {
-        "php": ">=5.3.0",
+        "php": ">=5.4.0",
         "codeclimate/php-test-reporter": "dev-master",
         "ext-gd": "*",
         "phpro/grumphp": "^0.12.0",
@@ -37,7 +37,8 @@
         "sebastian/phpcpd": "^3.0",
         "squizlabs/php_codesniffer": "^3.1",
         "friendsofphp/php-cs-fixer": "^2.8",
-        "wearejust/grumphp-extra-tasks": "^2.1"
+        "wearejust/grumphp-extra-tasks": "^2.1",
+        "phpunit/phpunit": "^4.8.36"
     },
     "autoload": {
         "psr-4": {

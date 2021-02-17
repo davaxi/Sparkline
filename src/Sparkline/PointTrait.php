@@ -16,18 +16,20 @@ trait PointTrait
      * @param $index
      * @param $dotRadius
      * @param $colorHex
+     * @param int $seriesIndex
      */
-    public function addPoint($index, $dotRadius, $colorHex)
+    public function addPoint($index, $dotRadius, $colorHex, $seriesIndex = 0)
     {
-        $mapping = $this->getPointIndexMapping();
+        $mapping = $this->getPointIndexMapping($seriesIndex);
         if (array_key_exists($index, $mapping)) {
             $index = $mapping[$index];
             if ($index < 0) {
                 return;
             }
         }
-        $this->checkPointIndex($index);
+        $this->checkPointIndex($index, $seriesIndex);
         $this->points[] = [
+            'series' => $seriesIndex,
             'index' => $index,
             'radius' => $dotRadius,
             'color' => $this->colorHexToRGB($colorHex),
@@ -35,12 +37,13 @@ trait PointTrait
     }
 
     /**
+     * @param int $seriesIndex
      * @return array
      */
-    protected function getPointIndexMapping()
+    protected function getPointIndexMapping($seriesIndex = 0)
     {
-        $count = $this->getCount();
-        list($minIndex, $min, $maxIndex, $max) = $this->getExtremeValues();
+        $count = $this->getCount($seriesIndex);
+        list($minIndex, $min, $maxIndex, $max) = $this->getExtremeValues($seriesIndex);
 
         $mapping = [];
         $mapping['first'] = $count > 1 ? 0 : -1;
@@ -52,16 +55,17 @@ trait PointTrait
     }
 
     /**
+     * @param int $seriesIndex
      * @param $index
      */
-    protected function checkPointIndex($index)
+    protected function checkPointIndex($index, $seriesIndex)
     {
-        $count = $this->getCount();
+        $count = $this->getCount($seriesIndex);
         if (!is_numeric($index)) {
             throw new \InvalidArgumentException('Invalid index : ' . $index);
         }
         if ($index < 0 || $index >= $count) {
-            throw new \InvalidArgumentException('Index out of range [0-' . $count - 1 . '] : ' . $index);
+            throw new \InvalidArgumentException('Index out of range [0-' . ($count - 1) . '] : ' . $index);
         }
     }
 }
