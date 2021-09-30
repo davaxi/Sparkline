@@ -14,11 +14,11 @@ php:
     - 8.0
 
 before_install:
+    - pecl channel-update pecl.php.net
+    - pecl install gd xdebug
     - composer self-update
 
 install:
-    - rm composer.json
-    - mv composer.travis.json composer.json
     - composer install
 
 script:
