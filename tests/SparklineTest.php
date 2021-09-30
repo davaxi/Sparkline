@@ -246,12 +246,12 @@ class SparklineTest extends SparklinePHPUnit
      */
     public function testDisplayModified()
     {
-        $path = __DIR__ . '/data/testGenerate.png';
-        $expectedPath = __DIR__ . '/data/testGenerate-mockup.png';
+        $path = __DIR__ . '/data/testGenerate-display-modified.png';
+        $expectedPath = __DIR__ . '/data/testGenerate2-mockup.png';
         if (phpversion() >= '8.0') {
-            $expectedPath = __DIR__ . '/data/testGenerate-mockup-8.0.png';
+            $expectedPath = __DIR__ . '/data/testGenerate2-mockup-8.0.png';
         } elseif (phpversion() >= '7.2') {
-            $expectedPath = __DIR__ . '/data/testGenerate-mockup-7.2.png';
+            $expectedPath = __DIR__ . '/data/testGenerate2-mockup-7.2.png';
         }
 
         $eTag = uniqid();
@@ -283,8 +283,8 @@ class SparklineTest extends SparklinePHPUnit
 
     public function Generate_empty()
     {
-        $path = __DIR__ . '/data/testGenerate.png';
-        $expectedPath = __DIR__ . '/data/testGenerate-mockup.png';
+        $path = __DIR__ . '/data/testGenerate-empty.png';
+        $expectedPath = __DIR__ . '/data/testGenerate-empty-mockup.png';
 
         $this->sparkline->generate();
         $file = $this->sparkline->getAttribute('file');
@@ -298,7 +298,7 @@ class SparklineTest extends SparklinePHPUnit
 
     public function testGenerate_data()
     {
-        $path = __DIR__ . '/data/testGenerate2.png';
+        $path = __DIR__ . '/data/testGenerate2-data.png';
         $expectedPath = __DIR__ . '/data/testGenerate2-mockup.png';
         if (phpversion() >= '8.0') {
             $expectedPath = __DIR__ . '/data/testGenerate2-mockup-8.0.png';
