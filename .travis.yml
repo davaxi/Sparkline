@@ -25,6 +25,10 @@ install:
         if [ $TRAVIS_PHP_VERSION == '8.0' ]; then
           rm composer.json && mv composer-8.json composer.json;
         fi
+    - |
+        if [ $TRAVIS_PHP_VERSION == '8.1' ]; then
+          rm composer.json && mv composer-8.json composer.json;
+        fi
     - composer install
 
 script:
