@@ -255,6 +255,7 @@ class SparklineTest extends SparklinePHPUnit
         }
 
         $eTag = uniqid();
+        $this->sparkline->setData([2,4,5,6,10,7,8,5,7,7,11,8,6,9,11,9,13,14,12,16]);
         $this->sparkline->setETag('Other Etag');
         $this->sparkline->setExpire('2016-01-01 00:00:00');
         $this->sparkline->setServer(
