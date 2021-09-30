@@ -9,17 +9,14 @@ addons:
 matrix:
     include:
         - php: 7.0
-          env: PHP_VERSION="7.0"
         - php: 7.1
-          env: PHP_VERSION="7.1"
         - php: 7.2
-          env: PHP_VERSION="7.2"
         - php: 7.3
-          env: PHP_VERSION="7.3"
         - php: 7.4
-          env: PHP_VERSION="7.4"
         - php: 8.0
-          env: PHP_VERSION="8.0"
+          before_script:
+            - rm composer.json
+            - mv composer-8.json composer.json
 
 before_install:
     - sudo apt-get update

@@ -20,23 +20,12 @@ class SparklineTest extends SparklinePHPUnit
      */
     protected $sparkline;
 
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->sparkline = new SparklineMockup();
-    }
-
-    protected function tearDown()
-    {
-        parent::tearDown();
-        $this->sparkline->destroy();
-    }
-
     /**
      * @expectedException InvalidArgumentException
      */
     public function testSetFormat_invalid()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->sparkline->setFormat('invalid format');
     }
 
@@ -127,6 +116,7 @@ class SparklineTest extends SparklinePHPUnit
      */
     public function testSetBackgroundColorHex_invalid()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->sparkline->setBackgroundColorHex('invalid hexadecimal color');
     }
 
@@ -153,6 +143,7 @@ class SparklineTest extends SparklinePHPUnit
      */
     public function testSetLineColorHex_invalid()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->sparkline->setLineColorHex('invalid hexadecimal color');
     }
 
@@ -179,6 +170,7 @@ class SparklineTest extends SparklinePHPUnit
      */
     public function testSetFillColorHex_invalid()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->sparkline->setFillColorHex('invalid hexadecimal color');
     }
 
@@ -239,7 +231,14 @@ class SparklineTest extends SparklinePHPUnit
                 'HTTP_IF_NONE_MATCH' => $this->sparkline->getAttribute('eTag'),
             ]
         );
+
+        ob_start();
         $this->sparkline->display();
+        $picture = ob_get_clean();
+
+        # $headers = xdebug_get_headers();
+        # $this->assertContains('HTTP/1.0 304 Not Modified', $headers);
+        $this->assertEmpty($picture);
     }
 
     /**
@@ -249,7 +248,9 @@ class SparklineTest extends SparklinePHPUnit
     {
         $path = __DIR__ . '/data/testGenerate.png';
         $expectedPath = __DIR__ . '/data/testGenerate-mockup.png';
-        if (phpversion() >= '7.2') {
+        if (phpversion() >= '8.0') {
+            $expectedPath = __DIR__ . '/data/testGenerate-mockup-8.0.png';
+        } elseif (phpversion() >= '7.2') {
             $expectedPath = __DIR__ . '/data/testGenerate-mockup-7.2.png';
         }
 
@@ -273,10 +274,11 @@ class SparklineTest extends SparklinePHPUnit
 
         file_put_contents($path, $picture);
         $md5 = md5_file($path);
-        unlink($path);
 
         $expectedMD5 = md5_file($expectedPath);
         $this->assertEquals($expectedMD5, $md5);
+
+        unlink($path);
     }
 
     public function Generate_empty()
@@ -292,14 +294,15 @@ class SparklineTest extends SparklinePHPUnit
         $expectedMD5 = md5_file($expectedPath);
         $this->assertEquals($expectedMD5, $md5);
 
-        unlink($path);
     }
 
     public function testGenerate_data()
     {
         $path = __DIR__ . '/data/testGenerate2.png';
         $expectedPath = __DIR__ . '/data/testGenerate2-mockup.png';
-        if (phpversion() >= '7.2') {
+        if (phpversion() >= '8.0') {
+            $expectedPath = __DIR__ . '/data/testGenerate2-mockup-8.0.png';
+        } else if (phpversion() >= '7.2') {
             $expectedPath = __DIR__ . '/data/testGenerate2-mockup-7.2.png';
         }
 
@@ -318,7 +321,9 @@ class SparklineTest extends SparklinePHPUnit
     public function testToBase64()
     {
         $expectedPath = __DIR__ . '/data/testGenerate2-mockup.png';
-        if (phpversion() >= '7.2') {
+        if (phpversion() >= '8.0') {
+            $expectedPath = __DIR__ . '/data/testGenerate2-mockup-8.0.png';
+        } else if (phpversion() >= '7.2') {
             $expectedPath = __DIR__ . '/data/testGenerate2-mockup-7.2.png';
         }
 
