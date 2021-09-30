@@ -20,23 +20,12 @@ class SparklineTest extends SparklinePHPUnit
      */
     protected $sparkline;
 
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->sparkline = new SparklineMockup();
-    }
-
-    protected function tearDown()
-    {
-        parent::tearDown();
-        $this->sparkline->destroy();
-    }
-
     /**
      * @expectedException InvalidArgumentException
      */
     public function testSetFormat_invalid()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->sparkline->setFormat('invalid format');
     }
 
@@ -127,6 +116,7 @@ class SparklineTest extends SparklinePHPUnit
      */
     public function testSetBackgroundColorHex_invalid()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->sparkline->setBackgroundColorHex('invalid hexadecimal color');
     }
 
@@ -153,6 +143,7 @@ class SparklineTest extends SparklinePHPUnit
      */
     public function testSetLineColorHex_invalid()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->sparkline->setLineColorHex('invalid hexadecimal color');
     }
 
@@ -179,6 +170,7 @@ class SparklineTest extends SparklinePHPUnit
      */
     public function testSetFillColorHex_invalid()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->sparkline->setFillColorHex('invalid hexadecimal color');
     }
 
@@ -239,7 +231,14 @@ class SparklineTest extends SparklinePHPUnit
                 'HTTP_IF_NONE_MATCH' => $this->sparkline->getAttribute('eTag'),
             ]
         );
+
+        ob_start();
         $this->sparkline->display();
+        $picture = ob_get_clean();
+
+        # $headers = xdebug_get_headers();
+        # $this->assertContains('HTTP/1.0 304 Not Modified', $headers);
+        $this->assertEmpty($picture);
     }
 
     /**
@@ -247,7 +246,16 @@ class SparklineTest extends SparklinePHPUnit
      */
     public function testDisplayModified()
     {
+        $path = __DIR__ . '/data/testGenerate-display-modified.png';
+        $expectedPath = __DIR__ . '/data/testGenerate2-mockup.png';
+        if (phpversion() >= '8.0') {
+            $expectedPath = __DIR__ . '/data/testGenerate2-mockup-8.0.png';
+        } elseif (phpversion() >= '7.2') {
+            $expectedPath = __DIR__ . '/data/testGenerate2-mockup-7.2.png';
+        }
+
         $eTag = uniqid();
+        $this->sparkline->setData([2,4,5,6,10,7,8,5,7,7,11,8,6,9,11,9,13,14,12,16]);
         $this->sparkline->setETag('Other Etag');
         $this->sparkline->setExpire('2016-01-01 00:00:00');
         $this->sparkline->setServer(
@@ -265,21 +273,19 @@ class SparklineTest extends SparklinePHPUnit
         $this->assertContains('Content-Disposition: inline; filename="sparkline.png"', $headers);
         $this->assertContains('Accept-Ranges: none', $headers);
 
-        $path = __DIR__ . '/data/testGenerate.png';
-        $expectedPath = __DIR__ . '/data/testGenerate-mockup.png';
-
         file_put_contents($path, $picture);
         $md5 = md5_file($path);
-        unlink($path);
 
         $expectedMD5 = md5_file($expectedPath);
         $this->assertEquals($expectedMD5, $md5);
+
+        unlink($path);
     }
 
     public function Generate_empty()
     {
-        $path = __DIR__ . '/data/testGenerate.png';
-        $expectedPath = __DIR__ . '/data/testGenerate-mockup.png';
+        $path = __DIR__ . '/data/testGenerate-empty.png';
+        $expectedPath = __DIR__ . '/data/testGenerate-empty-mockup.png';
 
         $this->sparkline->generate();
         $file = $this->sparkline->getAttribute('file');
@@ -289,13 +295,17 @@ class SparklineTest extends SparklinePHPUnit
         $expectedMD5 = md5_file($expectedPath);
         $this->assertEquals($expectedMD5, $md5);
 
-        unlink($path);
     }
 
     public function testGenerate_data()
     {
-        $path = __DIR__ . '/data/testGenerate2.png';
+        $path = __DIR__ . '/data/testGenerate2-data.png';
         $expectedPath = __DIR__ . '/data/testGenerate2-mockup.png';
+        if (phpversion() >= '8.0') {
+            $expectedPath = __DIR__ . '/data/testGenerate2-mockup-8.0.png';
+        } else if (phpversion() >= '7.2') {
+            $expectedPath = __DIR__ . '/data/testGenerate2-mockup-7.2.png';
+        }
 
         $this->sparkline->setData([2,4,5,6,10,7,8,5,7,7,11,8,6,9,11,9,13,14,12,16]);
         $this->sparkline->generate();
@@ -304,9 +314,6 @@ class SparklineTest extends SparklinePHPUnit
 
         $md5 = md5_file($path);
         $expectedMD5 = md5_file($expectedPath);
-        if (getenv('TRAVIS') && phpversion() >= "5.6") {
-            $expectedMD5 = '5337e6e4fcd213fe3d55c89df8c00e32';
-        }
         $this->assertEquals($expectedMD5, $md5);
 
         unlink($path);
@@ -314,10 +321,17 @@ class SparklineTest extends SparklinePHPUnit
 
     public function testToBase64()
     {
-        $expectedPath = __DIR__ . '/data/testGenerate-mockup.png';
+        $expectedPath = __DIR__ . '/data/testGenerate2-mockup.png';
+        if (phpversion() >= '8.0') {
+            $expectedPath = __DIR__ . '/data/testGenerate2-mockup-8.0.png';
+        } else if (phpversion() >= '7.2') {
+            $expectedPath = __DIR__ . '/data/testGenerate2-mockup-7.2.png';
+        }
+
         $expectedContent = file_get_contents($expectedPath);
         $expectedPathBase64 = base64_encode($expectedContent);
 
+        $this->sparkline->setData([2,4,5,6,10,7,8,5,7,7,11,8,6,9,11,9,13,14,12,16]);
         $value = $this->sparkline->toBase64();
         $this->assertEquals($expectedPathBase64, $value);
     }
@@ -325,7 +339,7 @@ class SparklineTest extends SparklinePHPUnit
     public function testPoints()
     {
         $path = __DIR__ . '/data/testGeneratePoints.png';
-        $this->sparkline->setData([-1, 2,4,5,6,10,7,8,5,7,7,11,8,6,9,11,9,13,14,12,16]);
+        $this->sparkline->setData([-1, 2, 4, 5, 6, 10, 7, 8, 5, 7, 7, 11, 8, 6, 9, 11, 9, 13, 14, 12, 16]);
         $this->sparkline->addPoint(4, 4, '#6a737b');
         $this->sparkline->addPoint('first', 3, '#fbb034');
         $this->sparkline->addPoint('last', 3, '#008374');

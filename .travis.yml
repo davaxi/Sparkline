@@ -1,24 +1,29 @@
+dist: xenial
+
 language: php
 
 addons:
     code_climate:
         repo_token: 3b0878715671c2e346688330ab3b1f96c9f92b722d5bd9b4d2901fb39e6698b2
 
-dist: trusty
-
-php:
-    - 5.4
-    - 5.5
-    - 5.6
-    - 7.0
-    - 7.1
+matrix:
+    include:
+        - php: 7.0
+        - php: 7.1
+        - php: 7.2
+        - php: 7.3
+        - php: 7.4
+        - php: 8.0
 
 before_install:
-    - composer self-update
+    - sudo apt-get update
+    - sudo apt-get install -y php-gd
 
 install:
-    - rm composer.json
-    - mv composer.travis.json composer.json
+    - |
+        if [ $TRAVIS_PHP_VERSION == '8.0' ]; then
+          rm composer.json && mv composer-8.json composer.json;
+        fi
     - composer install
 
 script:
