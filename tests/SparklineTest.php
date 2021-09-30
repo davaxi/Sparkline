@@ -247,6 +247,12 @@ class SparklineTest extends SparklinePHPUnit
      */
     public function testDisplayModified()
     {
+        $path = __DIR__ . '/data/testGenerate.png';
+        $expectedPath = __DIR__ . '/data/testGenerate-mockup.png';
+        if (phpversion() >= '7.2') {
+            $expectedPath = __DIR__ . '/data/testGenerate-mockup-7.2.png';
+        }
+
         $eTag = uniqid();
         $this->sparkline->setETag('Other Etag');
         $this->sparkline->setExpire('2016-01-01 00:00:00');
@@ -264,9 +270,6 @@ class SparklineTest extends SparklinePHPUnit
         $this->assertContains('Content-Type: image/png', $headers);
         $this->assertContains('Content-Disposition: inline; filename="sparkline.png"', $headers);
         $this->assertContains('Accept-Ranges: none', $headers);
-
-        $path = __DIR__ . '/data/testGenerate.png';
-        $expectedPath = __DIR__ . '/data/testGenerate-mockup.png';
 
         file_put_contents($path, $picture);
         $md5 = md5_file($path);
@@ -296,6 +299,9 @@ class SparklineTest extends SparklinePHPUnit
     {
         $path = __DIR__ . '/data/testGenerate2.png';
         $expectedPath = __DIR__ . '/data/testGenerate2-mockup.png';
+        if (phpversion() >= '7.2') {
+            $expectedPath = __DIR__ . '/data/testGenerate2-mockup-7.2.png';
+        }
 
         $this->sparkline->setData([2,4,5,6,10,7,8,5,7,7,11,8,6,9,11,9,13,14,12,16]);
         $this->sparkline->generate();
@@ -311,10 +317,15 @@ class SparklineTest extends SparklinePHPUnit
 
     public function testToBase64()
     {
-        $expectedPath = __DIR__ . '/data/testGenerate-mockup.png';
+        $expectedPath = __DIR__ . '/data/testGenerate2-mockup.png';
+        if (phpversion() >= '7.2') {
+            $expectedPath = __DIR__ . '/data/testGenerate2-mockup-7.2.png';
+        }
+
         $expectedContent = file_get_contents($expectedPath);
         $expectedPathBase64 = base64_encode($expectedContent);
 
+        $this->sparkline->setData([2,4,5,6,10,7,8,5,7,7,11,8,6,9,11,9,13,14,12,16]);
         $value = $this->sparkline->toBase64();
         $this->assertEquals($expectedPathBase64, $value);
     }
