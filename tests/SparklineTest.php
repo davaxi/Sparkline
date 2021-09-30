@@ -304,9 +304,6 @@ class SparklineTest extends SparklinePHPUnit
 
         $md5 = md5_file($path);
         $expectedMD5 = md5_file($expectedPath);
-        if (getenv('TRAVIS') && phpversion() >= "5.6") {
-            $expectedMD5 = '5337e6e4fcd213fe3d55c89df8c00e32';
-        }
         $this->assertEquals($expectedMD5, $md5);
 
         unlink($path);
@@ -325,7 +322,7 @@ class SparklineTest extends SparklinePHPUnit
     public function testPoints()
     {
         $path = __DIR__ . '/data/testGeneratePoints.png';
-        $this->sparkline->setData([-1, 2,4,5,6,10,7,8,5,7,7,11,8,6,9,11,9,13,14,12,16]);
+        $this->sparkline->setData([-1, 2, 4, 5, 6, 10, 7, 8, 5, 7, 7, 11, 8, 6, 9, 11, 9, 13, 14, 12, 16]);
         $this->sparkline->addPoint(4, 4, '#6a737b');
         $this->sparkline->addPoint('first', 3, '#fbb034');
         $this->sparkline->addPoint('last', 3, '#008374');
