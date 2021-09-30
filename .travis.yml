@@ -14,15 +14,16 @@ matrix:
         - php: 7.3
         - php: 7.4
         - php: 8.0
-          before_script:
-            - rm composer.json
-            - mv composer-8.json composer.json
 
 before_install:
     - sudo apt-get update
     - sudo apt-get install -y php-gd
 
 install:
+    - |
+        if [ $TRAVIS_PHP_VERSION == '8.0' ]; then
+          rm composer.json && mv composer-8.json composer.json;
+        fi
     - composer install
 
 script:
