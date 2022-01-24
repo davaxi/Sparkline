@@ -107,6 +107,7 @@ trait StyleTrait
 
     /**
      * Set fill color to transparent.
+	 * @param int|null $seriesIndex
      */
     public function deactivateFillColor(?int $seriesIndex = null)
     {
