@@ -107,10 +107,15 @@ trait StyleTrait
 
     /**
      * Set fill color to transparent.
+	 * @param int|null $seriesIndex
      */
-    public function deactivateFillColor()
+    public function deactivateFillColor(?int $seriesIndex = null)
     {
-        $this->fillColor = [];
+        if ($seriesIndex === null) {
+            $this->fillColor = [];
+        } else {
+            unset($this->fillColor[$seriesIndex]);
+        }
     }
 
     /**
@@ -140,11 +145,11 @@ trait StyleTrait
      */
     public function getFillColor(int $seriesIndex = 0): array
     {
-        if (empty($this->fillColor)) {
+        if (empty($this->fillColor) || !isset($this->fillColor[$seriesIndex])) {
             return [];
         }
 
-        return $this->fillColor[$seriesIndex] ?? $this->fillColor[0];
+        return $this->fillColor[$seriesIndex];
     }
 
     /**
