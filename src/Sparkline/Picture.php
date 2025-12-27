@@ -181,7 +181,9 @@ class Picture
             $this->height
         );
         imagesavealpha($sparkline, true);
-        imagedestroy($this->resource);
+        if (PHP_VERSION < 80000) {
+            imagedestroy($this->resource);
+        }
 
         return $sparkline;
     }
