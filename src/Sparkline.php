@@ -9,9 +9,6 @@ use Davaxi\Sparkline\PointTrait;
 use Davaxi\Sparkline\StyleTrait;
 use InvalidArgumentException;
 
-/**
- * Class Sparkline.
- */
 class Sparkline
 {
     use StyleTrait;
@@ -28,8 +25,7 @@ class Sparkline
     const CSS_PADDING = 4;
 
     /**
-     * @var string
-     *             ex: QUERY_STRING if dedicated url
+     * @var string ex: QUERY_STRING if dedicated url
      */
     protected $eTag;
 
@@ -54,8 +50,6 @@ class Sparkline
     protected $server = [];
 
     /**
-     * Sparkline constructor.
-     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -79,8 +73,7 @@ class Sparkline
     }
 
     /**
-     * @param string $filename
-     *                         Without extension
+     * @param string $filename Without extension
      */
     public function setFilename(string $filename)
     {
@@ -88,8 +81,7 @@ class Sparkline
     }
 
     /**
-     * @param string|int $expire
-     *                           time format or string format
+     * @param string|int $expire time format or string format
      */
     public function setExpire($expire)
     {
@@ -238,9 +230,6 @@ class Sparkline
 
     public function destroy()
     {
-        if ($this->file && PHP_VERSION < 80000) {
-            imagedestroy($this->file);
-        }
         $this->file = null;
     }
 }
