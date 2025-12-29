@@ -2,9 +2,6 @@
 
 namespace Davaxi\Sparkline;
 
-/**
- * Class PictureTrait.
- */
 class Picture
 {
     const DOT_RADIUS_TO_WIDTH = 2;
@@ -109,11 +106,7 @@ class Picture
             return;
         }
         $fillColor = imagecolorallocate($this->resource, $fillColor[0], $fillColor[1], $fillColor[2]);
-        if (version_compare(PHP_VERSION, '8.1.0') === -1) {
-            imagefilledpolygon($this->resource, $polygon, $count + 2, $fillColor);
-        } else {
-            imagefilledpolygon($this->resource, $polygon, $fillColor);
-        }
+        imagefilledpolygon($this->resource, $polygon, $fillColor);
     }
 
     /**
@@ -181,9 +174,6 @@ class Picture
             $this->height
         );
         imagesavealpha($sparkline, true);
-        if (PHP_VERSION < 80000) {
-            imagedestroy($this->resource);
-        }
 
         return $sparkline;
     }
