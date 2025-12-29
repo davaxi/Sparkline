@@ -32,7 +32,7 @@ or
 
 ```json
   "require": {
-    "davaxi/sparkline": "^2.2"
+    "davaxi/sparkline": "^2.3"
   }
 ```
 
