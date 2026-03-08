@@ -4,9 +4,6 @@ namespace Davaxi\Sparkline;
 
 use InvalidArgumentException;
 
-/**
- * Trait PointTrait.
- */
 trait PointTrait
 {
     /**

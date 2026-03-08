@@ -4,20 +4,15 @@ namespace Davaxi\Sparkline;
 
 use InvalidArgumentException;
 
-/**
- * Trait FormatTrait.
- */
 trait FormatTrait
 {
     /**
-     * @var int
-     *          Recommended: 50 < 800
+     * @var int Recommended: 50 < 800
      */
     protected $width = 80;
 
     /**
-     * @var int
-     *          Recommended: 20 < 800
+     * @var int Recommended: 20 < 800
      */
     protected $height = 20;
 

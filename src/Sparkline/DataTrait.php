@@ -2,20 +2,15 @@
 
 namespace Davaxi\Sparkline;
 
-/**
- * Trait DataTrait.
- */
 trait DataTrait
 {
     /**
-     * @var int
-     *          Base of value
+     * @var int Base of value
      */
     protected $base;
 
     /**
-     * @var int
-     *          Original value of chart
+     * @var int Original value of chart
      */
     protected $originValue = 0;
 
@@ -27,8 +22,7 @@ trait DataTrait
     ];
 
     /**
-     * @param $base
-     * Set base for values
+     * @param int $base Set base for values
      */
     public function setBase($base)
     {
@@ -36,8 +30,7 @@ trait DataTrait
     }
 
     /**
-     * @param float $originValue
-     *                           Set origin value of chart
+     * @param float $originValue Set origin value of chart
      */
     public function setOriginValue(float $originValue)
     {
@@ -49,8 +42,6 @@ trait DataTrait
      */
     public function setData(...$allSeries)
     {
-        $allSeries = func_get_args();
-
         $this->data = [];
         foreach ($allSeries as $data) {
             $this->addSeries($data);

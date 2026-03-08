@@ -49,13 +49,11 @@ Example:
 ```php
 <?php
 
-require '/path/to/sparkline/folder/autoload.php';
+require 'vendor/autoload.php';
 
 $sparkline = new Davaxi\Sparkline();
 $sparkline->setData(array(2,4,5,6,10,7,8,5,7,7,11,8,6,9,11,9,13,14,12,16));
 $sparkline->display();
-
-?>
 ```
 
 ## Documentation

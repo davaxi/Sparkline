@@ -4,9 +4,6 @@ namespace Davaxi\Sparkline;
 
 use InvalidArgumentException;
 
-/**
- * Trait StyleTrait.
- */
 trait StyleTrait
 {
     /**
@@ -107,7 +104,7 @@ trait StyleTrait
 
     /**
      * Set fill color to transparent.
-	 * @param int $seriesIndex
+     * @param int $seriesIndex
      */
     public function deactivateFillColor(int $seriesIndex = 0)
     {
@@ -165,7 +162,7 @@ trait StyleTrait
      */
     protected function colorHexToRGB(string $color): array
     {
-        if (!$this->checkColorHex($color)) {
+        if (!self::checkColorHex($color)) {
             throw new InvalidArgumentException('Invalid hexadecimal value ' . $color);
         }
 

@@ -1,6 +1,8 @@
-.idea
 .DS_Store
+.idea
 .php_cs.cache
-composer.phar
-composer.lock
+.phpunit.result.cache
 /vendor/
+composer.lock
+composer.phar
+tests/data/testGenerate2-data.png
