@@ -16,7 +16,7 @@ This page contains information about installing the Library for PHP.
 
 ### Requirements
 
-- PHP version 7.0.0 or greater
+- PHP version 8.0.0 or greater
 - The GD PHP extension
 - The MBString PHP extension
 
@@ -32,13 +32,17 @@ or
 
 ```json
   "require": {
-    "davaxi/sparkline": "^2.3"
+    "davaxi/sparkline": "^2.4"
   }
 ```
 
+#### For PHP >= 7.0
+
+See https://github.com/davaxi/Sparkline/tree/2.3.0
+
 #### For PHP >= 5.4.0
 
-Show https://github.com/davaxi/Sparkline/tree/1.2.3
+See https://github.com/davaxi/Sparkline/tree/1.2.3
 
 ## Usage
 
