@@ -2,6 +2,5 @@
 .github/ export-ignore
 .gitignore export-ignore
 .php_cs export-ignore
-grumphp.yml export-ignore
 phpunit.xml export-ignore
 tests/ export-ignore
