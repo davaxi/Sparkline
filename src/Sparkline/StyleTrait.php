@@ -44,6 +44,12 @@ trait StyleTrait
     protected $lineStyle = [];
 
     /**
+     * Series indexes for which the line is deactivated.
+     * @var bool[]
+     */
+    protected $lineDeactivated = [];
+
+    /**
      * Set background to transparent.
      */
     public function deactivateBackgroundColor()
@@ -133,6 +139,23 @@ trait StyleTrait
     public function getLineColor(int $seriesIndex = 0): array
     {
         return $this->lineColor[$seriesIndex] ?? $this->lineColor[0];
+    }
+
+    /**
+     * @param int $seriesIndex
+     */
+    public function deactivateLine(int $seriesIndex = 0)
+    {
+        $this->lineDeactivated[$seriesIndex] = true;
+    }
+
+    /**
+     * @param int $seriesIndex
+     * @return bool
+     */
+    public function isLineDeactivated(int $seriesIndex = 0): bool
+    {
+        return $this->lineDeactivated[$seriesIndex] ?? false;
     }
 
     /**

@@ -224,6 +224,73 @@ class SparklineTest extends SparklinePHPUnit
         $this->assertEquals([], $this->sparkline->getLineStyle(1));
     }
 
+    public function testDeactivateLine()
+    {
+        $this->sparkline->deactivateLine(0);
+        $this->assertTrue($this->sparkline->isLineDeactivated(0));
+        $this->assertFalse($this->sparkline->isLineDeactivated(1));
+    }
+
+    public function testDeactivateLine_perSeries()
+    {
+        $this->sparkline->deactivateLine(1);
+        $this->assertFalse($this->sparkline->isLineDeactivated(0));
+        $this->assertTrue($this->sparkline->isLineDeactivated(1));
+    }
+
+    public function testDeactivateLine_doesNotDrawLine()
+    {
+        $path = __DIR__ . '/data/testGenerateNoLine.png';
+        $this->sparkline->setData([2, 5, 4, 6]);
+        $this->sparkline->deactivateLine(0);
+        $this->sparkline->save($path);
+        $this->assertFileExists($path);
+        unlink($path);
+    }
+
+    public function testSetOriginValue_scalar()
+    {
+        $this->sparkline->setOriginValue(5.0);
+        $originValue = $this->sparkline->getAttribute('originValue');
+        $this->assertEquals(5.0, $originValue);
+    }
+
+    public function testSetOriginValue_perSeries()
+    {
+        $this->sparkline->setOriginValue([1, 2], [3, 4]);
+        $originValue = $this->sparkline->getAttribute('originValue');
+        $this->assertEquals([[1, 2], [3, 4]], $originValue);
+    }
+
+    public function testGetOriginSeries_empty_when_scalar()
+    {
+        $this->sparkline->setOriginValue(5.0);
+        $this->assertEquals([], $this->sparkline->getOriginSeries(0));
+    }
+
+    public function testGetOriginSeries_returns_series()
+    {
+        $this->sparkline->setOriginValue([1, 2, 3], [4, 5, 6]);
+        $this->assertEquals([1, 2, 3], $this->sparkline->getOriginSeries(0));
+        $this->assertEquals([4, 5, 6], $this->sparkline->getOriginSeries(1));
+    }
+
+    public function testGetOriginSeries_missing_series_returns_empty()
+    {
+        $this->sparkline->setOriginValue([1, 2, 3]);
+        $this->assertEquals([], $this->sparkline->getOriginSeries(1));
+    }
+
+    public function testRangeGenerates()
+    {
+        $path = __DIR__ . '/data/testGenerateRange.png';
+        $this->sparkline->setData([2, 5, 4, 6], [1, 2, 2, 3]);
+        $this->sparkline->setOriginValue([1, 2, 2, 3], [0, 1, 1, 1]);
+        $this->sparkline->save($path);
+        $this->assertFileExists($path);
+        unlink($path);
+    }
+
     public function testSetData()
     {
         $this->sparkline->setData([]);
